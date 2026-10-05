@@ -12,6 +12,53 @@ public class JackpotOpenRequest
 }
 
 [Serializable]
+public class ScatterFeature
+{
+    public bool enabled;
+    public Dictionary<string, int> anyCountPayouts;
+    public int scatterSymbolId;
+}
+
+[Serializable]
+public class AnyBarsPayoutFeature
+{
+    public double payout;
+    public bool enabled;
+    public string groupName;
+}
+
+[Serializable]
+public class AnySevensGroupFeature
+{
+    public bool enabled;
+    public string groupName;
+    public double redBlue7Payout;
+}
+
+[Serializable]
+public class WildSubstitutionFeature
+{
+    public bool enabled;
+    public int wildSymbolId;
+    public List<int> substituteAllExcept;
+}
+
+[Serializable]
+public class ResultFeatures
+{
+    public ResultScatter scatter;
+}
+
+[Serializable]
+public class ResultScatter
+{
+    public bool triggered;
+    public int scatterCount;
+    public List<List<int>> positions;
+    public double award;
+}
+
+[Serializable]
 public class JackpotOpenPayload
 {
   public string tier;
@@ -72,6 +119,11 @@ public class ServerFeatures
   public int betMultiplier;
   public int maxWinMultiplier;
   public int minWinMultiplier;
+
+    public ScatterFeature scatter;
+    public AnyBarsPayoutFeature anyBarsPayout;
+    public AnySevensGroupFeature anySevensGroup;
+    public WildSubstitutionFeature wildSubstitution;
 }
 
 [Serializable]
@@ -175,6 +227,8 @@ public class ServerPayload
   public double grandTotalWin;
   public List<ServerWinLine> winningLines;
   public ServerDualWheelsBonus dualWheelsBonus;
+  public ResultFeatures features;
+
 
   public int scatterCount;
   public bool scatterTriggered;
@@ -312,6 +366,10 @@ public class GameConfig
 
   public DualWheelsFeature dualWheels;
   public AnyPayoutsData anyPayouts;
+
+    public ScatterFeature scatterFeature;
+    public AnyBarsPayoutFeature anyBarsPayout;
+    public AnySevensGroupFeature anySevensGroup;
 }
 
 [Serializable]
@@ -404,9 +462,10 @@ public class FreeSpinData
 [Serializable]
 public class ScatterData
 {
-  public bool isTriggered;
-  public int scatterCount;
-  public double winAmount;
+    public bool isTriggered;
+    public int scatterCount;
+    public double winAmount;
+    public List<int> positions;
 }
 
 [Serializable]
@@ -503,8 +562,8 @@ public static class InitDataConverter
           name = serverSymbol.name,
           group = serverSymbol.group,
           multipliers = new List<double>(),
-          isWild = (serverSymbol.id == 1 || serverSymbol.id == 2),
-          isScatter = (serverSymbol.id >= 10 && serverSymbol.id <= 13),
+          isWild = (serverSymbol.group == "wild"),
+          isScatter = (serverSymbol.group == "scatter"),
           minMatch = serverSymbol.minMatch > 0 ? serverSymbol.minMatch : 3
         };
 
@@ -524,6 +583,9 @@ public static class InitDataConverter
 
     if (serverData?.features != null)
     {
+      config.scatterFeature = serverData.features.scatter;
+      config.anyBarsPayout = serverData.features.anyBarsPayout;
+      config.anySevensGroup = serverData.features.anySevensGroup;
       config.dualWheels = serverData.features.dualWheels;
       config.anyPayouts = serverData.features.anyPayouts;
       config.betMultiplier = serverData.features.betMultiplier > 0 ? serverData.features.betMultiplier : 1;
@@ -598,14 +660,32 @@ public static class InitDataConverter
         ? serverResponse.payload.grandTotalWin
         : Math.Max(winAmountVal, featureWins);
 
-    var result = new SpinResult
+        int reelCountForScatter = gameConfig != null ? gameConfig.reelCount : 3;
+        var combinedWinLines = ConvertWinningLines(serverResponse.payload?.winningLines, serverResponse.payload?.waysWins, gameConfig);
+
+        ResultScatter scatterInfo = serverResponse.payload?.features?.scatter;
+        bool scatterTriggered = scatterInfo != null && scatterInfo.triggered;
+        List<int> scatterFlatPositions = scatterTriggered ? FlattenPositions(scatterInfo.positions, reelCountForScatter) : null;
+
+        if (scatterTriggered && scatterFlatPositions != null && scatterFlatPositions.Count > 0)
+        {
+            combinedWinLines.Add(new WinLine
+            {
+                lineId = -1,
+                symbolId = gameConfig != null ? gameConfig.scatterSymbolId : 0,
+                positions = scatterFlatPositions,
+                winAmount = scatterInfo.award
+            });
+        }
+
+        var result = new SpinResult
     {
       resultMatrix = ConvertReelsToMatrix(serverResponse.payload?.reels, serverResponse.matrix, serverResponse.payload?.waysWins, gameConfig),
       winAmount = winAmountVal,
       grandTotalWin = grandTotalWinVal,
-      winLines = ConvertWinningLines(serverResponse.payload?.winningLines, serverResponse.payload?.waysWins, gameConfig),
+            winLines = combinedWinLines,
 
-      playerData = new PlayerData
+            playerData = new PlayerData
       {
         balance = newBalance,
         currentBetIndex = 0
@@ -621,16 +701,17 @@ public static class InitDataConverter
             }
             : null,
 
-      scatterData = (serverResponse.payload != null && serverResponse.payload.scatterTriggered)
-            ? new ScatterData
-            {
-              isTriggered = true,
-              scatterCount = serverResponse.payload.scatterCount,
-              winAmount = 0
-            }
-            : null,
+            scatterData = scatterTriggered
+      ? new ScatterData
+      {
+          isTriggered = true,
+          scatterCount = scatterInfo.scatterCount,
+          winAmount = scatterInfo.award,
+          positions = scatterFlatPositions
+      }
+      : null,
 
-      overlayScatterData = null,
+            overlayScatterData = null,
       stickyWilds = null,
 
       serverSpinsRemaining = spinsRemaining,
@@ -727,7 +808,21 @@ public static class InitDataConverter
     return matrix;
   }
 
-  private static List<WinLine> ConvertWinningLines(List<ServerWinLine> serverWinLines, List<ServerWaysWin> serverWaysWins, GameConfig gameConfig)
+    private static List<int> FlattenPositions(List<List<int>> positions, int reelCount)
+    {
+        var flat = new List<int>();
+        if (positions == null) return flat;
+        foreach (var pos in positions)
+        {
+            if (pos != null && pos.Count >= 2)
+            {
+                flat.Add(pos[0] * reelCount + pos[1]);
+            }
+        }
+        return flat;
+    }
+
+    private static List<WinLine> ConvertWinningLines(List<ServerWinLine> serverWinLines, List<ServerWaysWin> serverWaysWins, GameConfig gameConfig)
   {
     var winLines = new List<WinLine>();
     int reelCount = gameConfig != null ? gameConfig.reelCount : 3;

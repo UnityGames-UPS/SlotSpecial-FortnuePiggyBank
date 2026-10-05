@@ -686,7 +686,7 @@ public class SocketIOManager : MonoBehaviour
       var column = new List<int>();
       for (int row = 0; row < rowCount; row++)
       {
-        column.Add(UnityEngine.Random.Range(0, 10));
+        column.Add(UnityEngine.Random.Range(0, 7));
       }
       matrix.Add(column);
     }

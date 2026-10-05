@@ -22,19 +22,13 @@ public class SlotView : MonoBehaviour
     private Sprite[] symbolSprites;
 
     [Header("Win Animation Sprite Arrays for All Icons")]
-    [SerializeField] private List<Sprite> animSpritesRed3X;
-    [SerializeField] private List<Sprite> animSpritesBlue2X;
-    [SerializeField] private List<Sprite> animSpritesBlue7;
-    [SerializeField] private List<Sprite> animSpritesWhite7;
-    [SerializeField] private List<Sprite> animSpritesWhite7Bar;
+    [SerializeField] private List<Sprite> animSpritesPig;
+    [SerializeField] private List<Sprite> animSpritesWild;
     [SerializeField] private List<Sprite> animSpritesRed7;
+    [SerializeField] private List<Sprite> animSpritesBlue7;
     [SerializeField] private List<Sprite> animSpritesTripleBar;
     [SerializeField] private List<Sprite> animSpritesDoubleBar;
     [SerializeField] private List<Sprite> animSpritesSingleBar;
-    [SerializeField] private List<Sprite> animSpritesSpin;
-    [SerializeField] private List<Sprite> animSpritesGreenWheel;
-    [SerializeField] private List<Sprite> animSpritesDoubleWheel;
-    [SerializeField] private List<Sprite> animSpritesRedWheel;
 
     private List<Sprite>[] animationSpriteArrays;
 
@@ -53,6 +47,7 @@ public class SlotView : MonoBehaviour
     [SerializeField] private float spinSpeed = 2000f;
     [SerializeField] private float reelStartStagger = 0.08f;
     [SerializeField] private float reelStopStagger = 0.12f;
+    [SerializeField] private int spinBufferCount = 11;
 
     [Header("Stop Animation Settings")]
     [SerializeField] private float stopOvershootDistance = 50f;
@@ -68,6 +63,11 @@ public class SlotView : MonoBehaviour
 
     [Header("Win Animation Settings")]
     [SerializeField] private float winSymbolLoopDuration = 1.2f;
+
+    [Header("Static Symbol Win Pulse (Red7 / Blue7)")]
+    [SerializeField] private float staticSymbolBoxScale = 0.7f;
+    [SerializeField] private float staticPulseAmount = 1.08f;
+    [SerializeField] private float staticPulseLegDuration = 0.5f;
 
     [Header("Phase 1 Total Win Presentation")]
     [SerializeField] private TMPro.TMP_Text phase1TotalWinText;
@@ -122,6 +122,7 @@ public class SlotView : MonoBehaviour
     #region Initialization
 
     private Dictionary<GameObject, Vector3> originalWinBoxLocalPositions;
+    private Dictionary<GameObject, Vector3> winBoxBaseScales = new Dictionary<GameObject, Vector3>();
 
     private void CacheOriginalWinBoxPositions()
     {
@@ -157,10 +158,11 @@ public class SlotView : MonoBehaviour
 
     private void ResetWinBoxPosition(GameObject go)
     {
-        if (go != null && originalWinBoxLocalPositions != null && originalWinBoxLocalPositions.TryGetValue(go, out Vector3 origPos))
-        {
+        if (go == null) return;
+        if (originalWinBoxLocalPositions != null && originalWinBoxLocalPositions.TryGetValue(go, out Vector3 origPos))
             go.transform.localPosition = origPos;
-        }
+        if (winBoxBaseScales.TryGetValue(go, out Vector3 baseScale))
+            go.transform.localScale = baseScale;
     }
     private void Awake()
     {
@@ -265,20 +267,8 @@ public class SlotView : MonoBehaviour
         if (reel == null || reel.images == null) return;
 
         float customYOffset = 0f;
-        if (reelTransforms != null && col < reelTransforms.Length && reelTransforms[col] != null)
-        {
-            float reelY = reelTransforms[col].localPosition.y;
-            bool isCase1ReelPos = Mathf.Abs(reelY - (-160f)) < 30f;
-            bool isCase1Matrix = (currentDisplayMatrix != null && col < currentDisplayMatrix.Count &&
-                                  currentDisplayMatrix[col] != null && currentDisplayMatrix[col].Count >= 3 &&
-                                  currentDisplayMatrix[col][1] != 0);
-
-            if (isCase1ReelPos || isCase1Matrix)
-            {
-                if (row == 0) customYOffset = -10f;
-                else if (row == 2) customYOffset = 10f;
-            }
-        }
+        if (row == 0) customYOffset = -10f;
+        else if (row == 2) customYOffset = 10f;
 
         int imageIndex = 6 + row;
         if (imageIndex < reel.images.Count && reel.images[imageIndex] != null)
@@ -327,34 +317,13 @@ public class SlotView : MonoBehaviour
     {
         if (winAnimationColumns == null || col < 0 || col >= winAnimationColumns.Length) return null;
         var overlay = winAnimationColumns[col];
-        if (overlay == null || overlay.rows == null || overlay.rows.Length == 0) return null;
+        if (overlay == null || overlay.rows == null || row < 0 || row >= overlay.rows.Length) return null;
+
+        GameObject animGO = overlay.rows[row];
+        if (animGO == null) return null;
 
         if (winAnimationParent && !winAnimationParent.activeSelf)
-        {
             winAnimationParent.SetActive(true);
-        }
-
-        GameObject animGO = null;
-
-        if (row == 0)
-        {
-            animGO = overlay.rows[0];
-            ResetWinBoxPosition(animGO);
-        }
-        else if (row == 2)
-        {
-            animGO = overlay.rows.Length > 1 ? overlay.rows[1] : overlay.rows[0];
-            ResetWinBoxPosition(animGO);
-        }
-        else if (row == 1)
-        {
-            animGO = overlay.rows[0];
-            if (animGO != null)
-            {
-                Vector3 basePos = GetOriginalWinBoxPosition(animGO);
-                animGO.transform.localPosition = new Vector3(basePos.x, 6.5f, basePos.z);
-            }
-        }
 
         return animGO;
     }
@@ -387,28 +356,14 @@ public class SlotView : MonoBehaviour
             if (symbolSprites[i] == null) symbolSprites[i] = defaultSprite;
         }
 
-        for (int i = 0; i < symbolSprites.Length; i++)
-        {
-            if (symbolSprites[i] == null)
-            {
-                symbolSprites[i] = defaultSprite;
-            }
-        }
-        animationSpriteArrays = new List<Sprite>[15];
-        animationSpriteArrays[1] = animSpritesRed3X;
-        animationSpriteArrays[2] = animSpritesBlue2X;
+        animationSpriteArrays = new List<Sprite>[8];
+        animationSpriteArrays[0] = animSpritesPig;
+        animationSpriteArrays[1] = animSpritesWild;
+        animationSpriteArrays[2] = animSpritesRed7;
         animationSpriteArrays[3] = animSpritesBlue7;
-        animationSpriteArrays[4] = animSpritesWhite7;
-        animationSpriteArrays[5] = animSpritesWhite7Bar;
-        animationSpriteArrays[6] = animSpritesRed7;
-        animationSpriteArrays[7] = animSpritesTripleBar;
-        animationSpriteArrays[8] = animSpritesDoubleBar;
-        animationSpriteArrays[9] = animSpritesSingleBar;
-        animationSpriteArrays[10] = animSpritesSpin;
-        animationSpriteArrays[11] = animSpritesGreenWheel;
-        animationSpriteArrays[12] = animSpritesDoubleWheel;
-        animationSpriteArrays[13] = animSpritesRedWheel;
-        animationSpriteArrays[14] = animSpritesRedWheel;
+        animationSpriteArrays[4] = animSpritesTripleBar;
+        animationSpriteArrays[5] = animSpritesDoubleBar;
+        animationSpriteArrays[6] = animSpritesSingleBar;
     }
 
     private void InitializeReels()
@@ -451,10 +406,9 @@ public class SlotView : MonoBehaviour
 
         for (int col = 0; col < reelCount; col++)
         {
-            if (col < reelCurveIntensity.Length && matrix[col] != null && matrix[col].Count >= 3)
+            if (col < reelCurveIntensity.Length)
             {
-                bool isCase1 = matrix[col][1] != 0;
-                reelCurveIntensity[col] = isCase1 ? 1f : 0f;
+                reelCurveIntensity[col] = 1f;
             }
 
             if (col < reelImagesList.Count)
@@ -472,18 +426,7 @@ public class SlotView : MonoBehaviour
 
     private float GetTargetYForResult(List<int> columnSymbols)
     {
-        if (columnSymbols == null || columnSymbols.Count < 3)
-            return middlePosition + case2StopY;
-
-        bool isMiddleIcon = columnSymbols[1] != 0;
-        if (isMiddleIcon)
-        {
-            return middlePosition + case1StopY;
-        }
-        else
-        {
-            return middlePosition + case2StopY;
-        }
+        return middlePosition + case1StopY;
     }
 
     private void SetReelSymbols(int columnIndex, List<int> visibleSymbolIds, bool isInitial = false)
@@ -493,69 +436,36 @@ public class SlotView : MonoBehaviour
         var reel = reelImagesList[columnIndex];
         if (reel.images == null || reel.images.Count < 14) return;
 
-        bool isCase1 = visibleSymbolIds != null && visibleSymbolIds.Count >= 3 && visibleSymbolIds[1] != 0;
-
-        List<int> nonBlankIds = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };
-
-        if (visibleSymbolIds != null)
+        List<int> fillerIds = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 7, 7 };
+        for (int i = fillerIds.Count - 1; i > 0; i--)
         {
-            foreach (int sId in visibleSymbolIds)
-            {
-                if (sId != 0) nonBlankIds.Remove(sId);
-            }
+            int r = Random.Range(0, i + 1);
+            int tmp = fillerIds[i];
+            fillerIds[i] = fillerIds[r];
+            fillerIds[r] = tmp;
         }
 
-        for (int i = nonBlankIds.Count - 1; i > 0; i--)
+        HashSet<int> reservedIndices = new HashSet<int> { 6, 7, 8 };
+        if (visibleSymbolIds != null && visibleSymbolIds.Count >= 3)
         {
-            int randomIndex = Random.Range(0, i + 1);
-            int temp = nonBlankIds[i];
-            nonBlankIds[i] = nonBlankIds[randomIndex];
-            nonBlankIds[randomIndex] = temp;
+            SetImageSymbol(reel.images[6], visibleSymbolIds[0]);
+            SetImageSymbol(reel.images[7], visibleSymbolIds[1]);
+            SetImageSymbol(reel.images[8], visibleSymbolIds[2]);
         }
 
         int bufferIndex = 0;
-        HashSet<int> reservedIndices = new HashSet<int>();
-
-        if (isCase1)
-        {
-            reservedIndices.Add(6);
-            reservedIndices.Add(7);
-            reservedIndices.Add(8);
-
-            int midId = (visibleSymbolIds != null && visibleSymbolIds.Count > 1) ? visibleSymbolIds[1] : 1;
-            int topId = GetRandomNonBlankSymbolId(nonBlankIds);
-            int botId = GetRandomNonBlankSymbolId(nonBlankIds);
-
-            SetImageSymbol(reel.images[7], midId);
-            SetImageSymbol(reel.images[6], topId);
-            SetImageSymbol(reel.images[8], botId);
-        }
-        else
-        {
-            reservedIndices.Add(6);
-            reservedIndices.Add(7);
-
-            int topSymbolId = (visibleSymbolIds != null && visibleSymbolIds.Count > 0) ? visibleSymbolIds[0] : 1;
-            int botSymbolId = (visibleSymbolIds != null && visibleSymbolIds.Count > 2) ? visibleSymbolIds[2] : 1;
-
-            SetImageSymbol(reel.images[6], topSymbolId);
-            SetImageSymbol(reel.images[7], botSymbolId);
-        }
-
         for (int i = 0; i < reel.images.Count; i++)
         {
             if (reservedIndices.Contains(i)) continue;
-
-            int symId = nonBlankIds[bufferIndex % nonBlankIds.Count];
+            SetImageSymbol(reel.images[i], fillerIds[bufferIndex % fillerIds.Count]);
             bufferIndex++;
-            SetImageSymbol(reel.images[i], symId);
         }
 
         if (isInitial && reelTransforms[columnIndex] != null)
         {
             reelTransforms[columnIndex].localPosition = new Vector3(
                 reelTransforms[columnIndex].localPosition.x,
-                0f,
+                middlePosition + case1StopY,
                 0f
             );
         }
@@ -664,7 +574,7 @@ public class SlotView : MonoBehaviour
         var reel = (columnIndex < reelImagesList.Count) ? reelImagesList[columnIndex] : null;
         int totalImages = (reel != null && reel.images != null && reel.images.Count > 0) ? reel.images.Count : 14;
 
-        int bufferCount = totalImages - 3;
+        int bufferCount = Mathf.Min(spinBufferCount, totalImages - 3);
         float fullDistance = bufferCount * symbolHeight;
         float halfDistance = fullDistance / 2f;
 
@@ -857,7 +767,7 @@ public class SlotView : MonoBehaviour
 
         SetReelSymbols(columnIndex, targetSymbols, false);
 
-        bool isCase1 = targetSymbols != null && targetSymbols.Count >= 3 && targetSymbols[1] != 0;
+        bool isCase1 = true;
         if (isCase1)
         {
             if (columnIndex < reelCurveIntensity.Length)
@@ -960,7 +870,7 @@ public class SlotView : MonoBehaviour
                     SetReelSymbols(col, resultMatrix[col], false);
                     reelTransforms[col].localPosition = new Vector3(
                         reelTransforms[col].localPosition.x,
-                        middlePosition,
+                        middlePosition + case1StopY,
                         0
                     );
                 }
@@ -1157,6 +1067,52 @@ public class SlotView : MonoBehaviour
         }
     }
 
+    private void PlayStaticWinPulse(GameObject animGO, ImageAnimation imageAnim, Image symbolImage, bool loop)
+    {
+        Image boxImage = imageAnim.rendererDelegate != null ? imageAnim.rendererDelegate : imageAnim.GetComponent<Image>();
+        if (boxImage == null) boxImage = animGO.GetComponentInChildren<Image>();
+        if (boxImage == null) return;
+
+        Transform t = animGO.transform;
+        if (!winBoxBaseScales.ContainsKey(animGO)) winBoxBaseScales[animGO] = t.localScale;
+        Vector3 baseScale = winBoxBaseScales[animGO];
+        Vector3 restScale = baseScale * staticSymbolBoxScale;
+        t.localScale = restScale;
+
+        imageAnim.StopAnimation();
+        animGO.SetActive(true);
+        boxImage.DOKill();
+        boxImage.sprite = symbolImage.sprite;
+        Color bc = boxImage.color;
+        boxImage.color = new Color(bc.r, bc.g, bc.b, 1f);
+        boxImage.enabled = true;
+        boxImage.gameObject.SetActive(true);
+
+        symbolImage.DOKill();
+        Color sc = symbolImage.color;
+        symbolImage.color = new Color(sc.r, sc.g, sc.b, 0f);
+        symbolImage.enabled = false;
+        symbolImage.gameObject.SetActive(false);
+
+        Tween pulse = t.DOScale(restScale * staticPulseAmount, staticPulseLegDuration)
+    .SetLoops(loop ? -1 : 2, LoopType.Yoyo)
+    .SetEase(Ease.InOutSine);
+
+        if (!loop)
+        {
+            pulse.OnComplete(() =>
+            {
+                ResetWinBoxPosition(animGO);
+                animGO.SetActive(false);
+                symbolImage.gameObject.SetActive(true);
+                symbolImage.enabled = true;
+                Color c2 = symbolImage.color;
+                symbolImage.color = new Color(c2.r, c2.g, c2.b, 1f);
+            });
+        }
+        winTweens.Add(pulse);
+    }
+
     private IEnumerator AnimateWinPositionsSingleLoop(IEnumerable<int> flatPositions)
     {
         if (flatPositions == null) yield break;
@@ -1196,7 +1152,11 @@ public class SlotView : MonoBehaviour
             if (symbolId < 0 || symbolId >= animationSpriteArrays.Length) continue;
 
             List<Sprite> animSprites = animationSpriteArrays[symbolId];
-            if (animSprites == null || animSprites.Count == 0) continue;
+            if (animSprites == null || animSprites.Count == 0)
+            {
+                PlayStaticWinPulse(animGO, imageAnim, symbolImage, false);
+                continue;
+            }
 
             imageAnim.textureArray = animSprites;
             imageAnim.animationMode = ImageAnimation.AnimationMode.SINGLE_PHASE;
@@ -1313,7 +1273,11 @@ public class SlotView : MonoBehaviour
             if (symbolId < 0 || symbolId >= animationSpriteArrays.Length) continue;
 
             List<Sprite> animSprites = animationSpriteArrays[symbolId];
-            if (animSprites == null || animSprites.Count == 0) continue;
+            if (animSprites == null || animSprites.Count == 0)
+            {
+                PlayStaticWinPulse(animGO, imageAnim, symbolImage, true);
+                continue;
+            }
 
             imageAnim.textureArray = animSprites;
             imageAnim.animationMode = ImageAnimation.AnimationMode.SINGLE_PHASE;

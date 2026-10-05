@@ -1695,25 +1695,16 @@ public class UIManager : MonoBehaviour
             totalLineCountText.text = gameManager.gameConfig.paylineCount.ToString();
         }
 
-        SetRuleSymbolText(1, ruleRed3XText);
-        SetRuleSymbolText(2, ruleBlue2XText);
-        SetRuleSymbolText(3, ruleBlue7Text);
-        SetRuleSymbolText(4, ruleWhite7Text);
-        SetRuleSymbolText(5, ruleWhite7BarText);
-        SetRuleSymbolText(6, ruleRed7Text);
-        SetRuleSymbolText(7, ruleTripleBarText);
-        SetRuleSymbolText(8, ruleDoubleBarText);
-        SetRuleSymbolText(9, ruleSingleBarText);
+        SetRuleSymbolText(1, ruleRed3XText);      // Wild
+        SetRuleSymbolText(2, ruleBlue2XText);     // Red7
+        SetRuleSymbolText(3, ruleBlue7Text);      // Blue7
+        SetRuleSymbolText(4, ruleWhite7Text);     // TripleBar
+        SetRuleSymbolText(5, ruleWhite7BarText);  // DoubleBar
+        SetRuleSymbolText(6, ruleRed7Text);       // SingleBar
 
-        if (gameManager.gameConfig.anyPayouts != null)
-        {
-            var any = gameManager.gameConfig.anyPayouts;
-            if (ruleAnyWildText != null) ruleAnyWildText.text = $"X{any.anyWilds.ToString("0.###")}";
-            if (ruleAny7Text != null) ruleAny7Text.text = $"X{any.any7.ToString("0.###")}";
-            if (ruleAnyBarText != null) ruleAnyBarText.text = $"X{any.anyBar.ToString("0.###")}";
-            if (ruleAnyOneRed3XText != null) ruleAnyOneRed3XText.text = $"X{any.anyOneRed3X.ToString("0.###")}";
-            if (ruleAnyOneBlue2XText != null) ruleAnyOneBlue2XText.text = $"X{any.anyOneBlue2X.ToString("0.###")}";
-        }
+        if (ruleTripleBarText != null) ruleTripleBarText.text = "";
+        if (ruleDoubleBarText != null) ruleDoubleBarText.text = "";
+        if (ruleSingleBarText != null) ruleSingleBarText.text = "";
     }
 
     private void SetRuleSymbolText(int symbolId, TMP_Text textComponent)

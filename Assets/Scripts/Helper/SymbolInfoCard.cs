@@ -112,20 +112,20 @@ public class SymbolInfoCard : MonoBehaviour
             symbolInfo = gameManager.gameConfig.symbols.Find(s => s.id == symbolId);
         }
 
-        bool isWild = (symbolId == 1 || symbolId == 2);
-        bool isWheel = (symbolId >= 10 && symbolId <= 13);
+        bool isWild = (symbolId == 1);
+        bool isScatter = (symbolId == 0);
 
-        if (isWild || isWheel)
+        if (isWild || isScatter)
         {
             infoText.alignment = TextAlignmentOptions.Center;
             infoText.enableWordWrapping = true;
-            if (isWheel)
+            if (isScatter)
             {
-                infoText.text = "2 Bonus Symbols + Wheel Bonus Triggers Lucky Wheels";
+                infoText.text = "Pays On Any 3 Or More, Anywhere On The Reels";
             }
             else if (isWild)
             {
-                infoText.text = "Substitutes For Any Other Symbol Except For Bonus Symbols And Wheel Symbols";
+                infoText.text = "Substitutes For Any Other Symbol Except Pig";
             }
         }
         else
