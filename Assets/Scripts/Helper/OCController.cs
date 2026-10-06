@@ -41,6 +41,13 @@ public class OCController : MonoBehaviour
     internal Vector3 PortraitSlotPosition => portraitSlotPosition;
     internal Vector3 LandscapeSlotPosition => landscapeSlotPosition;
 
+    [Header("Slot Frame Settings")]
+    [SerializeField] private Transform frameObject;
+    [SerializeField] private Vector3 landscapeFrameScale = Vector3.one;
+    [SerializeField] private Vector3 portraitFrameScale = Vector3.one;
+    [SerializeField] private Vector3 landscapeFramePosition = Vector3.zero;
+    [SerializeField] private Vector3 portraitFramePosition = Vector3.zero;
+
     [Header("Logo Object Settings")]
     [SerializeField] private RectTransform logoObject;
     [SerializeField] private Vector3 landscapeLogoScale = Vector3.one;
@@ -177,6 +184,25 @@ public class OCController : MonoBehaviour
             {
                 slotObject.localScale = targetScale;
                 slotObject.localPosition = targetPosition;
+            }
+        }
+
+        if (frameObject != null)
+        {
+            Vector3 targetScale = isMobilePortrait ? portraitFrameScale : landscapeFrameScale;
+            Vector3 targetPosition = isMobilePortrait ? portraitFramePosition : landscapeFramePosition;
+
+            if (transitionDuration > 0)
+            {
+                Tween scaleTween = frameObject.DOScale(targetScale, transitionDuration).SetEase(Ease.OutCubic);
+                Tween posTween = frameObject.DOLocalMove(targetPosition, transitionDuration).SetEase(Ease.OutCubic);
+                activeTweens.Add(scaleTween);
+                activeTweens.Add(posTween);
+            }
+            else
+            {
+                frameObject.localScale = targetScale;
+                frameObject.localPosition = targetPosition;
             }
         }
 

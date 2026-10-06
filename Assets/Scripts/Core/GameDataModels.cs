@@ -370,6 +370,7 @@ public class GameConfig
     public ScatterFeature scatterFeature;
     public AnyBarsPayoutFeature anyBarsPayout;
     public AnySevensGroupFeature anySevensGroup;
+    public WildSubstitutionFeature wildSubstitution;
 }
 
 [Serializable]
@@ -581,26 +582,28 @@ public static class InitDataConverter
       }
     }
 
-    if (serverData?.features != null)
-    {
-      config.scatterFeature = serverData.features.scatter;
-      config.anyBarsPayout = serverData.features.anyBarsPayout;
-      config.anySevensGroup = serverData.features.anySevensGroup;
-      config.dualWheels = serverData.features.dualWheels;
-      config.anyPayouts = serverData.features.anyPayouts;
-      config.betMultiplier = serverData.features.betMultiplier > 0 ? serverData.features.betMultiplier : 1;
-      config.maxWinMultiplier = serverData.features.maxWinMultiplier;
-      config.minWinMultiplier = serverData.features.minWinMultiplier;
+        if (serverData?.features != null)
+        {
+            config.scatterFeature = serverData.features.scatter;
+            config.anyBarsPayout = serverData.features.anyBarsPayout;
+            config.anySevensGroup = serverData.features.anySevensGroup;
+            config.wildSubstitution = serverData.features.wildSubstitution;
+            config.dualWheels = serverData.features.dualWheels;
+            config.anyPayouts = serverData.features.anyPayouts;
+            config.betMultiplier = serverData.features.betMultiplier > 0 ? serverData.features.betMultiplier : 1;
+            config.maxWinMultiplier = serverData.features.maxWinMultiplier;
+            config.minWinMultiplier = serverData.features.minWinMultiplier;
 
-      if (serverData.features.freeGames != null)
-      {
-        config.initialFreeSpins = serverData.features.freeGames.maxTotalFreeGames;
-      }
+            config.scatterSymbolId = serverData.features.scatter?.scatterSymbolId ?? config.scatterSymbolId;
+            config.wildSymbolId = serverData.features.wildSubstitution?.wildSymbolId ?? config.wildSymbolId;
 
+            if (serverData.features.freeGames != null)
+            {
+                config.initialFreeSpins = serverData.features.freeGames.maxTotalFreeGames;
+            }
+        }
 
-    }
-
-    return config;
+        return config;
   }
 
   internal static PlayerData ConvertToPlayerData(ServerPlayer serverPlayer, int defaultBetIndex = 0)
