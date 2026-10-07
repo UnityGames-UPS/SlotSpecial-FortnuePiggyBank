@@ -21,6 +21,9 @@ public class OCController : MonoBehaviour
     [SerializeField] private GameObject landscapeBackground;
     [SerializeField] private GameObject portraitBackground;
 
+    [Header("Landscape Only Objects")]
+    [SerializeField] private List<GameObject> landscapeOnlyObjects = new List<GameObject>();
+
     [Header("Canvas Scaler Resolutions")]
     [SerializeField] private Vector2 landscapeReferenceResolution = new Vector2(1920f, 1080f);
     [SerializeField] private Vector2 portraitReferenceResolution = new Vector2(1080f, 1920f);
@@ -120,6 +123,14 @@ public class OCController : MonoBehaviour
         if (portraitBackground != null)
         {
             portraitBackground.SetActive(isMobilePortrait);
+        }
+
+        if (landscapeOnlyObjects != null)
+        {
+            foreach (var go in landscapeOnlyObjects)
+            {
+                if (go != null) go.SetActive(!isMobilePortrait);
+            }
         }
 
         if (canvasScaler != null)

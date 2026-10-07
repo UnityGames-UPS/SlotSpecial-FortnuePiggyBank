@@ -40,6 +40,16 @@ public static class OrientationPreview
         SetActive(Ref<GameObject>(so, "landscapeBackground"), !portrait);
         SetActive(Ref<GameObject>(so, "portraitBackground"), portrait);
 
+        // Landscape-only objects (e.g. BGSparkle)
+        var landscapeOnly = so.FindProperty("landscapeOnlyObjects");
+        if (landscapeOnly != null)
+        {
+            for (int i = 0; i < landscapeOnly.arraySize; i++)
+            {
+                SetActive(landscapeOnly.GetArrayElementAtIndex(i).objectReferenceValue as GameObject, !portrait);
+            }
+        }
+
         // Canvas scaler
         var orientation = Ref<OrientationChange>(so, "orientationChange");
         if (orientation == null) orientation = Object.FindFirstObjectByType<OrientationChange>(FindObjectsInactive.Include);
