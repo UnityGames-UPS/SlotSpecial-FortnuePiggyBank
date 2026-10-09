@@ -186,6 +186,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button settingsCloseButton;
     [SerializeField] private Button settingsBgCloseButton;
     [SerializeField] private Button gameQuitButton;
+    private const float SettingsFadeDuration = 0.3f;
     [Header("Settings Panel - Portrait")]
     [SerializeField] private GameObject settingsPanelPortrait;
     [SerializeField] private RectTransform settingsPanelRectPortrait;
@@ -294,7 +295,6 @@ public class UIManager : MonoBehaviour
     private float lastRapidStopTime = -99f;
 
     [Header("UI State")]
-    private double currentWinDisplayValue = 0;
     private bool isSpecialWinActive = false;
     public bool IsSpecialWinActive => isSpecialWinActive;
     public System.Action OnSpecialWinComplete;
@@ -308,8 +308,6 @@ public class UIManager : MonoBehaviour
     private bool isWinTypeCounting;
     private double finalWinTypeAmount;
     private double currentWinTypeCount;
-    private double winTypeTotalBet;
-    private int activeWinTypePhase;
     private System.Action onWinTypeCompleteCallback;
 
 
@@ -714,7 +712,6 @@ public class UIManager : MonoBehaviour
 
     internal void OnGameInitialized()
     {
-        currentWinDisplayValue = 0;
         UpdateBetDisplay();
         UpdateBalanceDisplay();
         UpdateWinDisplay(0);
@@ -792,11 +789,9 @@ public class UIManager : MonoBehaviour
         }
 
         finalWinTypeAmount = winAmount;
-        winTypeTotalBet = totalBet;
         onWinTypeCompleteCallback = onComplete;
         isWinTypeCounting = true;
         currentWinTypeCount = 0;
-        activeWinTypePhase = 0;
 
         if (multiplier >= legendaryWinThreshold)
         {
@@ -1362,6 +1357,30 @@ public class UIManager : MonoBehaviour
 
     #region Settings Panel
 
+    private void AnimateSettingsPanelOpen(GameObject panel)
+    {
+        if (!panel) return;
+        CanvasGroup cg = panel.GetComponent<CanvasGroup>();
+        if (cg == null) cg = panel.AddComponent<CanvasGroup>();
+
+        cg.DOKill();
+        panel.transform.localScale = Vector3.one;
+        cg.alpha = 0f;
+        panel.SetActive(true);
+        cg.DOFade(1f, SettingsFadeDuration).SetEase(Ease.Linear).SetUpdate(true);
+    }
+
+    private void AnimateSettingsPanelClose(GameObject panel)
+    {
+        if (!panel || !panel.activeSelf) return;
+        CanvasGroup cg = panel.GetComponent<CanvasGroup>();
+        if (cg == null) cg = panel.AddComponent<CanvasGroup>();
+
+        cg.DOKill();
+        cg.DOFade(0f, SettingsFadeDuration).SetEase(Ease.Linear).SetUpdate(true)
+            .OnComplete(() => { if (panel) panel.SetActive(false); });
+    }
+
     private void OpenSettingsPanel()
     {
         if ((autoPlayPanel && autoPlayPanel.activeSelf) || (autoPlayPanelPortrait && autoPlayPanelPortrait.activeSelf))
@@ -1373,23 +1392,17 @@ public class UIManager : MonoBehaviour
         SetButtonActive(settingsOpenButton, settingsOpenButtonPortrait, false);
         SetButtonActive(settingsCloseButton, settingsCloseButtonPortrait, true);
         SetButtonActive(settingsBgCloseButton, settingsBgCloseButtonPortrait, true);
+        SetButtonInteractable(settingsCloseButton, settingsCloseButtonPortrait, true);
+        SetButtonInteractable(settingsBgCloseButton, settingsBgCloseButtonPortrait, true);
 
         if (settingsPanel)
         {
-            settingsPanel.SetActive(true);
-            CanvasGroup cg = settingsPanel.GetComponent<CanvasGroup>();
-            if (cg == null) cg = settingsPanel.AddComponent<CanvasGroup>();
-            cg.DOKill();
-            cg.DOFade(1f, 0.35f);
+            AnimateSettingsPanelOpen(settingsPanel);
         }
 
         if (settingsPanelPortrait)
         {
-            settingsPanelPortrait.SetActive(true);
-            CanvasGroup cg = settingsPanelPortrait.GetComponent<CanvasGroup>();
-            if (cg == null) cg = settingsPanelPortrait.AddComponent<CanvasGroup>();
-            cg.DOKill();
-            cg.DOFade(1f, 0.35f);
+            AnimateSettingsPanelOpen(settingsPanelPortrait);
         }
     }
 
@@ -1398,30 +1411,24 @@ public class UIManager : MonoBehaviour
         AudioManager.Instance?.PlayButton();
         isSettingsPanelOpen = false;
 
-        SetButtonActive(settingsOpenButton, settingsOpenButtonPortrait, true);
-        SetButtonActive(settingsCloseButton, settingsCloseButtonPortrait, false);
-        SetButtonActive(settingsBgCloseButton, settingsBgCloseButtonPortrait, false);
+        SetButtonInteractable(settingsCloseButton, settingsCloseButtonPortrait, false);
+        SetButtonInteractable(settingsBgCloseButton, settingsBgCloseButtonPortrait, false);
+        DOVirtual.DelayedCall(SettingsFadeDuration, () =>
+        {
+            if (isSettingsPanelOpen) return;
+            SetButtonActive(settingsCloseButton, settingsCloseButtonPortrait, false);
+            SetButtonActive(settingsBgCloseButton, settingsBgCloseButtonPortrait, false);
+            SetButtonActive(settingsOpenButton, settingsOpenButtonPortrait, true);
+        });
 
         if (settingsPanel)
         {
-            CanvasGroup cg = settingsPanel.GetComponent<CanvasGroup>();
-            if (cg == null) cg = settingsPanel.AddComponent<CanvasGroup>();
-            cg.DOKill();
-            cg.DOFade(0f, 0.35f).OnComplete(() =>
-            {
-                settingsPanel.SetActive(false);
-            });
+            AnimateSettingsPanelClose(settingsPanel);
         }
 
         if (settingsPanelPortrait)
         {
-            CanvasGroup cg = settingsPanelPortrait.GetComponent<CanvasGroup>();
-            if (cg == null) cg = settingsPanelPortrait.AddComponent<CanvasGroup>();
-            cg.DOKill();
-            cg.DOFade(0f, 0.35f).OnComplete(() =>
-            {
-                settingsPanelPortrait.SetActive(false);
-            });
+            AnimateSettingsPanelClose(settingsPanelPortrait);
         }
     }
 
@@ -1441,6 +1448,7 @@ public class UIManager : MonoBehaviour
                 cg.DOKill();
                 cg.alpha = 0f;
             }
+            settingsPanel.transform.localScale = Vector3.one;
             settingsPanel.SetActive(false);
         }
 
@@ -1452,6 +1460,7 @@ public class UIManager : MonoBehaviour
                 cg.DOKill();
                 cg.alpha = 0f;
             }
+            settingsPanelPortrait.transform.localScale = Vector3.one;
             settingsPanelPortrait.SetActive(false);
         }
     }
@@ -1628,7 +1637,6 @@ public class UIManager : MonoBehaviour
 
     private void UpdateWinDisplay(double amount)
     {
-        currentWinDisplayValue = amount;
         if (winAmountText) winAmountText.text = FormatAmount(amount);
         if (winAmountTextPortrait) winAmountTextPortrait.text = "WIN " + FormatAmount(amount);
 

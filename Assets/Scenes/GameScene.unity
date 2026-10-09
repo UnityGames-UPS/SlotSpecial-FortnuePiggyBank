@@ -26921,7 +26921,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1173043578
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28208,7 +28208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f521a04de7f494272a617b2719edd271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SocketIOManager
-  testToken: 5ac84c4f6bad45c38483f77dea8f32d3
+  testToken: e3d0eb03ebd94bb2ad6cf33cc9b2619a
   gameManager: {fileID: 1206269883}
   uiManager: {fileID: 885496184}
   popupManager: {fileID: 1363796882}
@@ -32568,7 +32568,6 @@ MonoBehaviour:
     - {fileID: 750695365}
     - {fileID: 556525684}
   case1StopY: 160
-  case2StopY: 0
   symbolHeight: 205
   spinSpeed: 5000
   reelStartStagger: 0.08
@@ -43619,7 +43618,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2103801737
 RectTransform:
   m_ObjectHideFlags: 0
@@ -43636,8 +43635,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 378.957, y: 165}
+  m_AnchoredPosition: {x: -24.375, y: 0}
+  m_SizeDelta: {x: 898.663, y: 165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2103801738
 MonoBehaviour:
@@ -43673,12 +43672,12 @@ MonoBehaviour:
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
-    topLeft: {r: 1, g: 0.972549, b: 0.50980395, a: 1}
-    topRight: {r: 1, g: 0.84705883, b: 0.23529412, a: 1}
-    bottomLeft: {r: 1, g: 0.5019608, b: 0.09411765, a: 1}
-    bottomRight: {r: 0.88235295, g: 0.1882353, b: 0.0627451, a: 1}
+    topLeft: {r: 1, g: 0.72803664, b: 0, a: 1}
+    topRight: {r: 0.9033054, g: 1, b: 0, a: 1}
+    bottomLeft: {r: 1, g: 0.47968668, b: 0, a: 1}
+    bottomRight: {r: 1, g: 0.13716353, b: 0.09411764, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 11400000, guid: e31d397553a5e4650804513a3c2442cb, type: 2}
+  m_spriteAsset: {fileID: 11400000, guid: 756ca2bb433c4e14b82a21dedcdb739f, type: 2}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
@@ -43686,10 +43685,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 150
+  m_fontSize: 130
+  m_fontSizeBase: 130
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 80
   m_fontStyle: 0
@@ -43703,7 +43702,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}

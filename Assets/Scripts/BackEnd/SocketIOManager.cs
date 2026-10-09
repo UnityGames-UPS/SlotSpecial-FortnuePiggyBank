@@ -49,7 +49,6 @@ public class SocketIOManager : MonoBehaviour
   private int missedPongs;
   private const int MAX_MISSED_PONGS = 5;
   private const float PING_INTERVAL = 2f;
-  private const float PONG_TIMEOUT = 5f;
 
   #region Initialization
 
@@ -355,6 +354,7 @@ public class SocketIOManager : MonoBehaviour
       if (!serverResponse.success)
       {
         Debug.LogError("[SocketIO] Spin failed");
+        gameManager.OnSpinFailed(false);    // <-- add this line
         return;
       }
 
@@ -376,6 +376,7 @@ public class SocketIOManager : MonoBehaviour
     catch (Exception e)
     {
       Debug.LogError($"[SocketIO] Result parse failed: {e.Message}");
+      gameManager.OnSpinFailed(false);   // <-- add this line
     }
   }
 

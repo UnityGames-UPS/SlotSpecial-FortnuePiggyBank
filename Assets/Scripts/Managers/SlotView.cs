@@ -40,7 +40,6 @@ public class SlotView : MonoBehaviour
 
     [Header("Reel Stop Y Positions")]
     [SerializeField] private float case1StopY = 160f;
-    [SerializeField] private float case2StopY = 0f;
 
     [Header("Spin Settings")]
     [SerializeField] private float symbolHeight = 100f;
@@ -106,8 +105,6 @@ public class SlotView : MonoBehaviour
 
 
     private float middlePosition = 0f;
-    private float cycleDistance;
-
 
     private List<Tween> spinTweens = new List<Tween>();
     private List<Tween> winTweens = new List<Tween>();
@@ -145,15 +142,6 @@ public class SlotView : MonoBehaviour
                 }
             }
         }
-    }
-
-    private Vector3 GetOriginalWinBoxPosition(GameObject go)
-    {
-        if (go != null && originalWinBoxLocalPositions != null && originalWinBoxLocalPositions.TryGetValue(go, out Vector3 origPos))
-        {
-            return origPos;
-        }
-        return go != null ? go.transform.localPosition : Vector3.zero;
     }
 
     private void ResetWinBoxPosition(GameObject go)
@@ -236,23 +224,6 @@ public class SlotView : MonoBehaviour
         imageToSymbolIdMap[img] = symbolId;
     }
 
-    private int GetRandomNonBlankSymbolId(List<int> nonBlankIds = null)
-    {
-        if (nonBlankIds == null || nonBlankIds.Count == 0)
-        {
-            nonBlankIds = new List<int>();
-            if (symbolSprites != null)
-            {
-                for (int i = 0; i < symbolSprites.Length; i++)
-                {
-                    if (symbolSprites[i] != null && i != 0) nonBlankIds.Add(i);
-                }
-            }
-        }
-        if (nonBlankIds.Count == 0) return 1;
-        return nonBlankIds[Random.Range(0, nonBlankIds.Count)];
-    }
-
     internal void OnSymbolClicked(int col, int row, RectTransform symbolRect)
     {
         if (isSpinning)
@@ -313,6 +284,12 @@ public class SlotView : MonoBehaviour
         }
     }
 
+    private void HideWinHolder()
+    {
+        DisableColumns(winAnimationColumns);
+        if (winAnimationParent) winAnimationParent.SetActive(false);
+    }
+
     private GameObject GetWinBoxObject(int col, int row)
     {
         if (winAnimationColumns == null || col < 0 || col >= winAnimationColumns.Length) return null;
@@ -368,7 +345,6 @@ public class SlotView : MonoBehaviour
 
     private void InitializeReels()
     {
-        cycleDistance = symbolHeight;
         middlePosition = 0f;
 
 
@@ -767,28 +743,10 @@ public class SlotView : MonoBehaviour
 
         SetReelSymbols(columnIndex, targetSymbols, false);
 
-        bool isCase1 = true;
-        if (isCase1)
+        if (columnIndex < reelCurveIntensity.Length)
         {
-            if (columnIndex < reelCurveIntensity.Length)
-            {
-                if (reelSettleCurveTweens[columnIndex] != null) reelSettleCurveTweens[columnIndex].Kill();
-                reelCurveIntensity[columnIndex] = 1f;
-            }
-        }
-        else
-        {
-            if (columnIndex < reelCurveIntensity.Length)
-            {
-                if (reelSettleCurveTweens[columnIndex] != null) reelSettleCurveTweens[columnIndex].Kill();
-                float settleDuration = isQuickStop ? (quickStopDuration * 0.7f) : stopSettleDuration;
-                int colIdx = columnIndex;
-                reelSettleCurveTweens[colIdx] = DOVirtual.Float(reelCurveIntensity[colIdx], 0f, settleDuration, (val) =>
-                {
-                    if (colIdx < reelCurveIntensity.Length) reelCurveIntensity[colIdx] = val;
-                });
-            }
-            StartCylindricalEffectCoroutine();
+            if (reelSettleCurveTweens[columnIndex] != null) reelSettleCurveTweens[columnIndex].Kill();
+            reelCurveIntensity[columnIndex] = 1f;
         }
 
         float landingStartTopY = targetY + (2f * symbolHeight);
@@ -881,6 +839,20 @@ public class SlotView : MonoBehaviour
         }
 
         StartCoroutine(StopSpinSequence(resultMatrix, onComplete, true));
+    }
+
+    internal void CancelSpin()
+    {
+        isSpinning = false;
+        KillAllTweens();
+        DisableAllOverlays();
+        for (int col = 0; col < reelTransforms.Length; col++)
+        {
+            if (reelTransforms[col] == null) continue;
+            reelTransforms[col].localPosition = new Vector3(
+                reelTransforms[col].localPosition.x, middlePosition + case1StopY, 0f);
+        }
+        UpdateCylindricalSpinEffect(force: true);
     }
 
     #endregion
@@ -1056,6 +1028,7 @@ public class SlotView : MonoBehaviour
         if (isAutoPlaying)
         {
             yield return StartCoroutine(AnimateWinPositionsSingleLoop(flatPositions));
+            HideWinHolder();                       // <-- new line
             HidePhase1TotalWinText(true);
             yield return new WaitForSeconds(0.15f);
             onComplete?.Invoke();
@@ -1341,7 +1314,7 @@ public class SlotView : MonoBehaviour
     {
         if (phase1TotalWinText != null)
         {
-            phase1TotalWinText.text = FormatSpriteText(totalWinAmount);
+            phase1TotalWinText.text = FormatPigSpriteText(totalWinAmount);
             AnimateTextScaleAppear(phase1TotalWinText.transform);
         }
     }
@@ -1369,6 +1342,22 @@ public class SlotView : MonoBehaviour
             {
                 sb.Append(c);
             }
+        }
+        return sb.ToString();
+    }
+
+    private static readonly int[] pigDigitSprite = { 2, 0, 1, 3, 4, 5, 7, 6, 10, 11 };
+
+    public static string FormatPigSpriteText(double amount)
+    {
+        string input = amount.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+        var sb = new System.Text.StringBuilder();
+        foreach (char c in input)
+        {
+            if (c >= '0' && c <= '9') sb.Append("<sprite=").Append(pigDigitSprite[c - '0']).Append(">");
+            else if (c == '.') sb.Append("<sprite=8>");
+            else if (c == ',') sb.Append("<sprite=9>");
+            else sb.Append(c);
         }
         return sb.ToString();
     }

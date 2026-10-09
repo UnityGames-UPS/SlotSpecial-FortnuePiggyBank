@@ -182,6 +182,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    internal void OnSpinFailed(bool refundBet)
+    {
+        if (currentState != GameState.Spinning || lastResult != null) return;
+
+        if (spinCoroutine != null) { StopCoroutine(spinCoroutine); spinCoroutine = null; }
+        if (slotView != null) slotView.CancelSpin();
+
+        if (refundBet && playerData != null) playerData.balance += GetTotalPay();
+
+        currentState = GameState.Idle;
+        if (isAutoPlaying) StopAutoPlay();
+        uiManager.OnSpinCompleted(null);
+    }
+
     private void StartSpin()
     {
         if (lastResult != null)
