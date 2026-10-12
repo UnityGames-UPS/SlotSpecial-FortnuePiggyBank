@@ -5,14 +5,14 @@ using Newtonsoft.Json;
 #region Server Communication Models
 
 [Serializable]
-public class JackpotOpenRequest
+internal class JackpotOpenRequest
 {
-  public string type = "JACKPOT_OPEN";
-  public JackpotOpenPayload payload = new JackpotOpenPayload();
+    public string type = "JACKPOT_OPEN";
+    public JackpotOpenPayload payload = new JackpotOpenPayload();
 }
 
 [Serializable]
-public class ScatterFeature
+internal class ScatterFeature
 {
     public bool enabled;
     public Dictionary<string, int> anyCountPayouts;
@@ -20,7 +20,7 @@ public class ScatterFeature
 }
 
 [Serializable]
-public class AnyBarsPayoutFeature
+internal class AnyBarsPayoutFeature
 {
     public double payout;
     public bool enabled;
@@ -28,7 +28,7 @@ public class AnyBarsPayoutFeature
 }
 
 [Serializable]
-public class AnySevensGroupFeature
+internal class AnySevensGroupFeature
 {
     public bool enabled;
     public string groupName;
@@ -36,7 +36,7 @@ public class AnySevensGroupFeature
 }
 
 [Serializable]
-public class WildSubstitutionFeature
+internal class WildSubstitutionFeature
 {
     public bool enabled;
     public int wildSymbolId;
@@ -44,13 +44,13 @@ public class WildSubstitutionFeature
 }
 
 [Serializable]
-public class ResultFeatures
+internal class ResultFeatures
 {
     public ResultScatter scatter;
 }
 
 [Serializable]
-public class ResultScatter
+internal class ResultScatter
 {
     public bool triggered;
     public int scatterCount;
@@ -59,66 +59,63 @@ public class ResultScatter
 }
 
 [Serializable]
-public class JackpotOpenPayload
+internal class JackpotOpenPayload
 {
-  public string tier;
+    public string tier;
 }
 
 [Serializable]
-public class InitData
+internal class InitData
 {
-  public string id = "initData";
-  public ServerGameData gameData;
-  public ServerFeatures features;
-  public ServerUIData uiData;
-  public ServerPlayer player;
-  public JackpotData jackpotData;
+    public string id = "initData";
+    public ServerGameData gameData;
+    public ServerFeatures features;
+    public ServerUIData uiData;
+    public ServerPlayer player;
+    public JackpotData jackpotData;
 }
 
 [Serializable]
-public class JackpotData
+internal class JackpotData
 {
-  public JackpotValues values;
-
+    public JackpotValues values;
 }
 
 [Serializable]
-public class JackpotValues
+internal class JackpotValues
 {
-  public string miniJackpot;
-  public string minorJackpot;
-  public string majorJackpot;
-  public string grandJackpot;
+    public string miniJackpot;
+    public string minorJackpot;
+    public string majorJackpot;
+    public string grandJackpot;
 }
 
 [Serializable]
-public class JackpotSyncData
+internal class JackpotSyncData
 {
-  public string gameId;
-  public JackpotValues values;
+    public string gameId;
+    public JackpotValues values;
 }
 
 [Serializable]
-public class ServerGameData
+internal class ServerGameData
 {
-  public List<List<int>> lines;
-  public List<double> bets;
-  public double creditDivisor = 1;
-  public int totalLines = 1;
+    public List<List<int>> lines;
+    public List<double> bets;
+    public double creditDivisor = 1;
+    public int totalLines = 1;
 }
 
 [Serializable]
-public class ServerFeatures
+internal class ServerFeatures
 {
-  public double baseCoinValue = 1;
-  public DualWheelsFeature dualWheels;
-  public AnyPayoutsData anyPayouts;
+    public double baseCoinValue = 1;
 
-  public MoneyBagFeature moneyBag;
-  public FreeGamesFeature freeGames;
-  public int betMultiplier;
-  public int maxWinMultiplier;
-  public int minWinMultiplier;
+    public MoneyBagFeature moneyBag;
+    public FreeGamesFeature freeGames;
+    public int betMultiplier;
+    public int maxWinMultiplier;
+    public int minWinMultiplier;
 
     public ScatterFeature scatter;
     public AnyBarsPayoutFeature anyBarsPayout;
@@ -127,214 +124,170 @@ public class ServerFeatures
 }
 
 [Serializable]
-public class DualWheelsFeature
+internal class MoneyBagFeature
 {
-  public bool enabled;
-  public List<double> greenWheelValues;
-  public List<double> redWheelValues;
+    public bool enabled;
+    public int minTrigger;
+    public int symbolId;
+    public int bagCount;
 }
 
 [Serializable]
-public class AnyPayoutsData
+internal class FreeGamesFeature
 {
-  public double any7;
-  public double anyBar;
-  public double wilds2x;
-  public double wilds3x;
-  public double anyOneRed3X;
-  public double anyWilds;
-  public double anyOneBlue2X;
+    public bool enabled;
+    public double payMultiplier;
+    public int maxTotalFreeGames;
 }
 
 [Serializable]
-public class MoneyBagFeature
+internal class ExtraSpinsData
 {
-  public bool enabled;
-  public int minTrigger;
-  public int symbolId;
-  public int bagCount;
+    [JsonProperty("2")] public int _2;
+    [JsonProperty("3")] public int _3;
+    [JsonProperty("4")] public int _4;
+    [JsonProperty("5")] public int _5;
 }
 
 [Serializable]
-public class FreeGamesFeature
+internal class ServerUIData
 {
-  public bool enabled;
-  public double payMultiplier;
-  public int maxTotalFreeGames;
+    public PaylineData paylines;
 }
 
 [Serializable]
-public class ExtraSpinsData
+internal class PaylineData
 {
-  [JsonProperty("2")] public int _2;
-  [JsonProperty("3")] public int _3;
-  [JsonProperty("4")] public int _4;
-  [JsonProperty("5")] public int _5;
+    public List<ServerSymbolInfo> symbols;
 }
 
 [Serializable]
-public class ServerUIData
+internal class ServerSymbolInfo
 {
-  public PaylineData paylines;
+    public int id;
+    public string name;
+    public string group;
+    public List<double> multiplier;
+    public double payout;
+    public string description;
+    public int minMatch;
 }
 
 [Serializable]
-public class PaylineData
+internal class ServerPlayer
 {
-  public List<ServerSymbolInfo> symbols;
+    public double balance;
 }
 
 [Serializable]
-public class ServerSymbolInfo
+internal class ServerSpinResponse
 {
-  public int id;
-  public string name;
-  public string group;
-  public List<double> multiplier;
-  public double payout;
-  public string description;
-  public int minMatch;
+    public string id = "spinResult";
+    public bool success;
+    public List<List<string>> matrix;
+    public ServerPlayerBalance player;
+    public ServerPayload payload;
 }
 
 [Serializable]
-public class ServerPlayer
+internal class ServerPlayerBalance
 {
-  public double balance;
+    public double? balance;
 }
 
 [Serializable]
-public class ServerSpinResponse
+internal class ServerPayload
 {
-  public string id = "spinResult";
-  public bool success;
-  public List<List<string>> matrix;
-  public ServerPlayerBalance player;
-  public ServerPayload payload;
+    public List<List<string>> reels;
+    public double totalWin;
+    public double winAmount;
+    public double grandTotalWin;
+    public List<ServerWinLine> winningLines;
+    public ResultFeatures features;
+
+    public int scatterCount;
+    public bool scatterTriggered;
+    public bool isRoundOver;
+    public double totalRoundWin;
+    public double netReturnRatio;
+    public List<ServerWaysWin> waysWins;
+    public ServerMoneyBagResult moneyBag;
+    public ServerFreeGamesResult freeGames;
 }
 
 [Serializable]
-public class ServerPlayerBalance
+internal class ServerWinLine
 {
-  public double? balance;
+    public int lineId = -1;
+    public int lineIndex = -1;
+    public int symbolId;
+    public string symbolName;
+    public object positions;
+    public List<ServerPosition> matchedPositions;
+    public double payout;
+    public double winAmount;
+    public double multiplier;
+    public double wildMultiplier;
 }
 
 [Serializable]
-public class ServerPayload
+internal class ServerWaysWin
 {
-  public List<List<string>> reels;
-  public double totalWin;
-  public double winAmount;
-  public double grandTotalWin;
-  public List<ServerWinLine> winningLines;
-  public ServerDualWheelsBonus dualWheelsBonus;
-  public ResultFeatures features;
-
-
-  public int scatterCount;
-  public bool scatterTriggered;
-  public bool isRoundOver;
-  public double totalRoundWin;
-  public double netReturnRatio;
-  public List<ServerWaysWin> waysWins;
-  public ServerMoneyBagResult moneyBag;
-  public ServerFreeGamesResult freeGames;
+    public int symbolId;
+    public int matchCount;
+    public int waysCount;
+    public List<ServerPosition> matchedPositions;
+    public double basePayout;
+    public double appliedMultiplier;
+    public double winInCredits;
+    public double winInCash;
+    public string winType;
 }
 
 [Serializable]
-public class ServerWinLine
+internal class ServerPosition
 {
-  public int lineId = -1;
-  public int lineIndex = -1;
-  public int symbolId;
-  public string symbolName;
-  public object positions;
-  public List<ServerPosition> matchedPositions;
-  public double payout;
-  public double winAmount;
-  public double multiplier;
-  public double wildMultiplier;
+    public int row;
+    public int col;
 }
 
 [Serializable]
-public class ServerDualWheelsBonus
+internal class ServerMoneyBagResult
 {
-  public bool isTriggered;
-  public string type;
-  public string wheelType;
-  public double totalWinAmount;
-  public double greenWheelValue;
-  public double redWheelValue;
-  public int greenWheelStopIndex = -1;
-  public int redWheelStopIndex = -1;
-
-  public string GetEffectiveWheelType()
-  {
-    if (!string.IsNullOrEmpty(type)) return type;
-    if (!string.IsNullOrEmpty(wheelType)) return wheelType;
-    return "";
-  }
+    public bool triggered;
+    public ServerMoneyBagResultDetail result;
 }
 
 [Serializable]
-public class ServerWaysWin
+internal class ServerMoneyBagResultDetail
 {
-  public int symbolId;
-  public int matchCount;
-  public int waysCount;
-  public List<ServerPosition> matchedPositions;
-  public double basePayout;
-  public double appliedMultiplier;
-  public double winInCredits;
-  public double winInCash;
-  public string winType;
+    public int pickedIndex;
+    public List<int> revealed;
+    public int creditsAwarded;
+    public double winInCash;
 }
 
 [Serializable]
-public class ServerPosition
+internal class ServerFreeGamesResult
 {
-  public int row;
-  public int col;
-}
-
-
-
-[Serializable]
-public class ServerMoneyBagResult
-{
-  public bool triggered;
-  public ServerMoneyBagResultDetail result;
+    public bool triggered;
+    public int totalAwarded;
+    public int played;
+    public double totalFreeGamesWin;
 }
 
 [Serializable]
-public class ServerMoneyBagResultDetail
+internal class SpinRequest
 {
-  public int pickedIndex;
-  public List<int> revealed;
-  public int creditsAwarded;
-  public double winInCash;
+    public string type = "SPIN";
+    public SpinPayload payload;
 }
 
 [Serializable]
-public class ServerFreeGamesResult
+internal class SpinPayload
 {
-  public bool triggered;
-  public int totalAwarded;
-  public int played;
-  public double totalFreeGamesWin;
-}
-
-[Serializable]
-public class SpinRequest
-{
-  public string type = "SPIN";
-  public SpinPayload payload;
-}
-
-[Serializable]
-public class SpinPayload
-{
-  public int betIndex;
-  public bool isFreeSpin;
+    public int betIndex;
+    public bool isFreeSpin;
 }
 
 #endregion
@@ -342,30 +295,27 @@ public class SpinPayload
 #region Game Configuration (Client Side Converted)
 
 [Serializable]
-public class GameConfig
+internal class GameConfig
 {
-  public int reelCount = 3;
-  public int rowCount = 3;
-  public int symbolCount = 14;
-  public int paylineCount = 1;
-  public List<List<int>> paylines;
-  public List<double> availableBets;
-  public List<SymbolInfo> symbols;
+    public int reelCount = 3;
+    public int rowCount = 3;
+    public int symbolCount = 14;
+    public int paylineCount = 1;
+    public List<List<int>> paylines;
+    public List<double> availableBets;
+    public List<SymbolInfo> symbols;
 
-  public int wildSymbolId = 1;
+    public int wildSymbolId = 1;
 
-  public int scatterSymbolId = 10;
+    public int scatterSymbolId = 10;
 
-  public double baseCoinValue = 1.0;
-  public int betMultiplier = 1;
-  public double creditDivisor = 1.0;
-  public int maxWinMultiplier = 10000;
-  public int minWinMultiplier = 10;
-  public int initialFreeSpins = 12;
-  public ExtraSpinsData extraSpinsData;
-
-  public DualWheelsFeature dualWheels;
-  public AnyPayoutsData anyPayouts;
+    public double baseCoinValue = 1.0;
+    public int betMultiplier = 1;
+    public double creditDivisor = 1.0;
+    public int maxWinMultiplier = 10000;
+    public int minWinMultiplier = 10;
+    public int initialFreeSpins = 12;
+    public ExtraSpinsData extraSpinsData;
 
     public ScatterFeature scatterFeature;
     public AnyBarsPayoutFeature anyBarsPayout;
@@ -374,16 +324,16 @@ public class GameConfig
 }
 
 [Serializable]
-public class SymbolInfo
+internal class SymbolInfo
 {
-  public int id;
-  public string name;
-  public string group;
-  public List<double> multipliers;
-  public bool isWild;
-  public bool isScatter;
-  public int wildMultiplier = 1;
-  public int minMatch;
+    public int id;
+    public string name;
+    public string group;
+    public List<double> multipliers;
+    public bool isWild;
+    public bool isScatter;
+    public int wildMultiplier = 1;
+    public int minMatch;
 }
 
 #endregion
@@ -391,77 +341,54 @@ public class SymbolInfo
 #region Player & Game State (Client Side)
 
 [Serializable]
-public class PlayerData
+internal class PlayerData
 {
-  public double balance;
-  public int currentBetIndex;
+    public double balance;
+    public int currentBetIndex;
 }
 
 [Serializable]
-public class SpinResult
+internal class SpinResult
 {
-  public List<List<int>> resultMatrix;
-  public double winAmount;
-  public double grandTotalWin;
-  public List<WinLine> winLines;
-  public PlayerData playerData;
-  public FreeSpinData freeSpinData;
-  public ScatterData scatterData;
-  public OverlayScatterData overlayScatterData;
-  public Dictionary<string, int> stickyWilds;
+    public List<List<int>> resultMatrix;
+    public double winAmount;
+    public double grandTotalWin;
+    public List<WinLine> winLines;
+    public PlayerData playerData;
+    public FreeSpinData freeSpinData;
+    public ScatterData scatterData;
+    public OverlayScatterData overlayScatterData;
+    public Dictionary<string, int> stickyWilds;
 
-  public int serverSpinsRemaining;
-  public int serverSpinsUsed;
-  public int serverTotalSpins;
-  public double serverTotalRoundWin;
-  public bool isRoundOver;
+    public int serverSpinsRemaining;
+    public int serverSpinsUsed;
+    public int serverTotalSpins;
+    public double serverTotalRoundWin;
+    public bool isRoundOver;
 
-  public DualWheelsBonusData dualWheelsBonusData;
-  public MoneyBagResultData moneyBagData;
-
-  public double GetDualWheelsWin()
-  {
-    return (dualWheelsBonusData != null && dualWheelsBonusData.isTriggered) ? dualWheelsBonusData.totalWinAmount : 0;
-  }
-
-  public double GetTotalFeatureDeferredWins()
-  {
-    return GetDualWheelsWin();
-  }
+    public MoneyBagResultData moneyBagData;
 }
 
 [Serializable]
-public class DualWheelsBonusData
+internal class WinLine
 {
-  public bool isTriggered;
-  public double totalWinAmount;
-  public double greenWheelValue;
-  public double redWheelValue;
-  public int greenWheelStopIndex = -1;
-  public int redWheelStopIndex = -1;
-  public string wheelType;
+    public int lineId;
+    public int symbolId;
+    public List<int> positions;
+    public double winAmount;
 }
 
 [Serializable]
-public class WinLine
+internal class FreeSpinData
 {
-  public int lineId;
-  public int symbolId;
-  public List<int> positions;
-  public double winAmount;
+    public bool isTriggered;
+    public int spinsAwarded;
+    public int remainingSpins;
+    public bool isBought;
 }
 
 [Serializable]
-public class FreeSpinData
-{
-  public bool isTriggered;
-  public int spinsAwarded;
-  public int remainingSpins;
-  public bool isBought;
-}
-
-[Serializable]
-public class ScatterData
+internal class ScatterData
 {
     public bool isTriggered;
     public int scatterCount;
@@ -470,24 +397,22 @@ public class ScatterData
 }
 
 [Serializable]
-public class OverlayScatterData
+internal class OverlayScatterData
 {
-  public bool isTriggered;
-  public int count;
-  public int extraSpins;
-  public List<List<int>> positions;
+    public bool isTriggered;
+    public int count;
+    public int extraSpins;
+    public List<List<int>> positions;
 }
 
-
-
 [Serializable]
-public class MoneyBagResultData
+internal class MoneyBagResultData
 {
-  public bool triggered;
-  public int pickedIndex;
-  public List<int> revealed;
-  public int creditsAwarded;
-  public double winInCash;
+    public bool triggered;
+    public int pickedIndex;
+    public List<int> revealed;
+    public int creditsAwarded;
+    public double winInCash;
 }
 
 #endregion
@@ -495,92 +420,83 @@ public class MoneyBagResultData
 #region Platform Communication
 
 [Serializable]
-public class AuthData
+internal class AuthData
 {
-  public string token;
-  public string socketURL;
-  public string nameSpace;
+    public string token;
+    public string socketURL;
+    public string nameSpace;
 }
 
 #endregion
 
 #region Enums
 
-public enum GameState
+internal enum GameState
 {
-  Initializing,
-  Idle,
-  Spinning,
-  Stopping,
-  ShowingWin,
-  FreeSpinMode
+    Initializing,
+    Idle,
+    Spinning,
+    Stopping,
+    ShowingWin,
+    FreeSpinMode
 }
 
-public enum SpinSpeed
+internal enum SpinSpeed
 {
-  Normal,
-  Turbo,
-  QuickSpin
+    Normal,
+    Turbo,
+    QuickSpin
 }
 
-public enum WinPopupType
+internal enum WinPopupType
 {
-  RegularWin,
-  BigWin,
-  FreeSpinTrigger,
-  MoneyBagCollect,
-  FreeSpinComplete
+    RegularWin,
+    BigWin,
+    FreeSpinTrigger,
+    MoneyBagCollect,
+    FreeSpinComplete
 }
 
 #endregion
 
 #region Helper Classes for Conversion
 
-public static class InitDataConverter
+internal static class InitDataConverter
 {
-  internal static GameConfig ConvertToGameConfig(InitData serverData)
-  {
-    var config = new GameConfig
+    internal static GameConfig ConvertToGameConfig(InitData serverData)
     {
-      reelCount = 3,
-      rowCount = 3,
-      symbolCount = (serverData?.uiData?.paylines?.symbols != null) ? serverData.uiData.paylines.symbols.Count : 14,
-      paylineCount = (serverData?.gameData != null) ? serverData.gameData.totalLines : 1,
-      paylines = serverData?.gameData?.lines,
-      availableBets = serverData?.gameData?.bets,
-      creditDivisor = (serverData?.features != null && serverData.features.baseCoinValue > 0) ? serverData.features.baseCoinValue : 1.0,
-      baseCoinValue = (serverData?.features != null && serverData.features.baseCoinValue > 0) ? serverData.features.baseCoinValue : 1.0,
-      symbols = new List<SymbolInfo>()
-    };
-
-    if (serverData?.uiData?.paylines?.symbols != null)
-    {
-      foreach (var serverSymbol in serverData.uiData.paylines.symbols)
-      {
-        var symbolInfo = new SymbolInfo
+        var config = new GameConfig
         {
-          id = serverSymbol.id,
-          name = serverSymbol.name,
-          group = serverSymbol.group,
-          multipliers = new List<double>(),
-          isWild = (serverSymbol.group == "wild"),
-          isScatter = (serverSymbol.group == "scatter"),
-          minMatch = serverSymbol.minMatch > 0 ? serverSymbol.minMatch : 3
+            reelCount = 3,
+            rowCount = 3,
+            symbolCount = (serverData?.uiData?.paylines?.symbols != null) ? serverData.uiData.paylines.symbols.Count : 14,
+            paylineCount = (serverData?.gameData != null) ? serverData.gameData.totalLines : 1,
+            paylines = serverData?.gameData?.lines,
+            availableBets = serverData?.gameData?.bets,
+            creditDivisor = (serverData?.features != null && serverData.features.baseCoinValue > 0) ? serverData.features.baseCoinValue : 1.0,
+            baseCoinValue = (serverData?.features != null && serverData.features.baseCoinValue > 0) ? serverData.features.baseCoinValue : 1.0,
+            symbols = new List<SymbolInfo>()
         };
 
-        symbolInfo.multipliers.Add(serverSymbol.payout);
-        config.symbols.Add(symbolInfo);
+        if (serverData?.uiData?.paylines?.symbols != null)
+        {
+            foreach (var serverSymbol in serverData.uiData.paylines.symbols)
+            {
+                var symbolInfo = new SymbolInfo
+                {
+                    id = serverSymbol.id,
+                    name = serverSymbol.name,
+                    group = serverSymbol.group,
+                    multipliers = new List<double>(),
+                    isWild = (serverSymbol.group == "wild"),
+                    isScatter = (serverSymbol.group == "scatter"),
+                    minMatch = serverSymbol.minMatch > 0 ? serverSymbol.minMatch : 3
+                };
 
-        if (symbolInfo.isWild && config.wildSymbolId <= 0)
-        {
-          config.wildSymbolId = symbolInfo.id;
+                symbolInfo.multipliers.Add(serverSymbol.payout);
+                config.symbols.Add(symbolInfo);
+            }
         }
-        if (symbolInfo.isScatter && config.scatterSymbolId <= 0)
-        {
-          config.scatterSymbolId = symbolInfo.id;
-        }
-      }
-    }
 
         if (serverData?.features != null)
         {
@@ -588,8 +504,6 @@ public static class InitDataConverter
             config.anyBarsPayout = serverData.features.anyBarsPayout;
             config.anySevensGroup = serverData.features.anySevensGroup;
             config.wildSubstitution = serverData.features.wildSubstitution;
-            config.dualWheels = serverData.features.dualWheels;
-            config.anyPayouts = serverData.features.anyPayouts;
             config.betMultiplier = serverData.features.betMultiplier > 0 ? serverData.features.betMultiplier : 1;
             config.maxWinMultiplier = serverData.features.maxWinMultiplier;
             config.minWinMultiplier = serverData.features.minWinMultiplier;
@@ -604,64 +518,60 @@ public static class InitDataConverter
         }
 
         return config;
-  }
-
-  internal static PlayerData ConvertToPlayerData(ServerPlayer serverPlayer, int defaultBetIndex = 0)
-  {
-    return new PlayerData
-    {
-      balance = serverPlayer != null ? serverPlayer.balance : 0,
-      currentBetIndex = defaultBetIndex
-    };
-  }
-
-  internal static SpinResult ConvertServerResponseToSpinResult(ServerSpinResponse serverResponse, double currentBalance, double betAmount, GameConfig gameConfig)
-  {
-    double winAmountVal = 0;
-    if (serverResponse.payload != null)
-    {
-      winAmountVal = serverResponse.payload.winAmount > 0 ? serverResponse.payload.winAmount : serverResponse.payload.totalWin;
     }
 
-    double totalPay = (gameConfig != null && gameConfig.creditDivisor > 0) ? betAmount * gameConfig.creditDivisor : betAmount;
-    double newBalance = serverResponse.player?.balance ?? CalculateNewBalance(currentBalance, totalPay, winAmountVal);
-
-    int spinsRemaining = 0;
-    int spinsUsed = 0;
-    int totalSpins = 0;
-    double totalRoundWin = 0;
-    bool isRoundOver = false;
-
-    if (serverResponse.payload?.freeGames != null)
+    internal static PlayerData ConvertToPlayerData(ServerPlayer serverPlayer, int defaultBetIndex = 0)
     {
-      spinsRemaining = serverResponse.payload.freeGames.totalAwarded - serverResponse.payload.freeGames.played;
-      spinsUsed = serverResponse.payload.freeGames.played;
-      totalSpins = serverResponse.payload.freeGames.totalAwarded;
-      totalRoundWin = serverResponse.payload.freeGames.totalFreeGamesWin;
-      isRoundOver = serverResponse.payload.freeGames.played >= serverResponse.payload.freeGames.totalAwarded && serverResponse.payload.freeGames.totalAwarded > 0;
-    }
-    else if (serverResponse.payload != null)
-    {
-      isRoundOver = serverResponse.payload.isRoundOver;
-      totalRoundWin = serverResponse.payload.totalRoundWin;
+        return new PlayerData
+        {
+            balance = serverPlayer != null ? serverPlayer.balance : 0,
+            currentBetIndex = defaultBetIndex
+        };
     }
 
-    double featureWins = 0;
-    if (serverResponse.payload != null)
+    internal static SpinResult ConvertServerResponseToSpinResult(ServerSpinResponse serverResponse, double currentBalance, double betAmount, GameConfig gameConfig)
     {
-      if (serverResponse.payload.dualWheelsBonus != null && serverResponse.payload.dualWheelsBonus.isTriggered)
-      {
-        featureWins += serverResponse.payload.dualWheelsBonus.totalWinAmount;
-      }
-      if (serverResponse.payload.moneyBag?.result != null)
-      {
-        featureWins += serverResponse.payload.moneyBag.result.winInCash;
-      }
-    }
+        double winAmountVal = 0;
+        if (serverResponse.payload != null)
+        {
+            winAmountVal = serverResponse.payload.winAmount > 0 ? serverResponse.payload.winAmount : serverResponse.payload.totalWin;
+        }
 
-    double grandTotalWinVal = (serverResponse.payload != null && serverResponse.payload.grandTotalWin > 0)
-        ? serverResponse.payload.grandTotalWin
-        : Math.Max(winAmountVal, featureWins);
+        double totalPay = (gameConfig != null && gameConfig.creditDivisor > 0) ? betAmount * gameConfig.creditDivisor : betAmount;
+        double newBalance = serverResponse.player?.balance ?? CalculateNewBalance(currentBalance, totalPay, winAmountVal);
+
+        int spinsRemaining = 0;
+        int spinsUsed = 0;
+        int totalSpins = 0;
+        double totalRoundWin = 0;
+        bool isRoundOver = false;
+
+        if (serverResponse.payload?.freeGames != null)
+        {
+            spinsRemaining = serverResponse.payload.freeGames.totalAwarded - serverResponse.payload.freeGames.played;
+            spinsUsed = serverResponse.payload.freeGames.played;
+            totalSpins = serverResponse.payload.freeGames.totalAwarded;
+            totalRoundWin = serverResponse.payload.freeGames.totalFreeGamesWin;
+            isRoundOver = serverResponse.payload.freeGames.played >= serverResponse.payload.freeGames.totalAwarded && serverResponse.payload.freeGames.totalAwarded > 0;
+        }
+        else if (serverResponse.payload != null)
+        {
+            isRoundOver = serverResponse.payload.isRoundOver;
+            totalRoundWin = serverResponse.payload.totalRoundWin;
+        }
+
+        double featureWins = 0;
+        if (serverResponse.payload != null)
+        {
+            if (serverResponse.payload.moneyBag?.result != null)
+            {
+                featureWins += serverResponse.payload.moneyBag.result.winInCash;
+            }
+        }
+
+        double grandTotalWinVal = (serverResponse.payload != null && serverResponse.payload.grandTotalWin > 0)
+            ? serverResponse.payload.grandTotalWin
+            : Math.Max(winAmountVal, featureWins);
 
         int reelCountForScatter = gameConfig != null ? gameConfig.reelCount : 3;
         var combinedWinLines = ConvertWinningLines(serverResponse.payload?.winningLines, serverResponse.payload?.waysWins, gameConfig);
@@ -682,134 +592,121 @@ public static class InitDataConverter
         }
 
         var result = new SpinResult
-    {
-      resultMatrix = ConvertReelsToMatrix(serverResponse.payload?.reels, serverResponse.matrix, serverResponse.payload?.waysWins, gameConfig),
-      winAmount = winAmountVal,
-      grandTotalWin = grandTotalWinVal,
+        {
+            resultMatrix = ConvertReelsToMatrix(serverResponse.payload?.reels, serverResponse.matrix, serverResponse.payload?.waysWins, gameConfig),
+            winAmount = winAmountVal,
+            grandTotalWin = grandTotalWinVal,
             winLines = combinedWinLines,
 
             playerData = new PlayerData
-      {
-        balance = newBalance,
-        currentBetIndex = 0
-      },
-
-      freeSpinData = (serverResponse.payload?.freeGames != null && serverResponse.payload.freeGames.triggered)
-            ? new FreeSpinData
             {
-              isTriggered = true,
-              spinsAwarded = serverResponse.payload.freeGames.totalAwarded,
-              remainingSpins = serverResponse.payload.freeGames.totalAwarded - serverResponse.payload.freeGames.played,
-              isBought = false
-            }
-            : null,
+                balance = newBalance,
+                currentBetIndex = 0
+            },
+
+            freeSpinData = (serverResponse.payload?.freeGames != null && serverResponse.payload.freeGames.triggered)
+                ? new FreeSpinData
+                {
+                    isTriggered = true,
+                    spinsAwarded = serverResponse.payload.freeGames.totalAwarded,
+                    remainingSpins = serverResponse.payload.freeGames.totalAwarded - serverResponse.payload.freeGames.played,
+                    isBought = false
+                }
+                : null,
 
             scatterData = scatterTriggered
-      ? new ScatterData
-      {
-          isTriggered = true,
-          scatterCount = scatterInfo.scatterCount,
-          winAmount = scatterInfo.award,
-          positions = scatterFlatPositions
-      }
-      : null,
+                ? new ScatterData
+                {
+                    isTriggered = true,
+                    scatterCount = scatterInfo.scatterCount,
+                    winAmount = scatterInfo.award,
+                    positions = scatterFlatPositions
+                }
+                : null,
 
             overlayScatterData = null,
-      stickyWilds = null,
+            stickyWilds = null,
 
-      serverSpinsRemaining = spinsRemaining,
-      serverSpinsUsed = spinsUsed,
-      serverTotalSpins = totalSpins,
-      serverTotalRoundWin = totalRoundWin,
-      isRoundOver = isRoundOver,
+            serverSpinsRemaining = spinsRemaining,
+            serverSpinsUsed = spinsUsed,
+            serverTotalSpins = totalSpins,
+            serverTotalRoundWin = totalRoundWin,
+            isRoundOver = isRoundOver,
 
-      dualWheelsBonusData = (serverResponse.payload?.dualWheelsBonus != null && serverResponse.payload.dualWheelsBonus.isTriggered)
-            ? new DualWheelsBonusData
-            {
-              isTriggered = true,
-              totalWinAmount = serverResponse.payload.dualWheelsBonus.totalWinAmount,
-              greenWheelValue = serverResponse.payload.dualWheelsBonus.greenWheelValue,
-              redWheelValue = serverResponse.payload.dualWheelsBonus.redWheelValue,
-              greenWheelStopIndex = serverResponse.payload.dualWheelsBonus.greenWheelStopIndex,
-              redWheelStopIndex = serverResponse.payload.dualWheelsBonus.redWheelStopIndex,
-              wheelType = serverResponse.payload.dualWheelsBonus.GetEffectiveWheelType()
-            }
-            : null,
+            moneyBagData = (serverResponse.payload?.moneyBag != null && serverResponse.payload.moneyBag.triggered && serverResponse.payload.moneyBag.result != null)
+                ? new MoneyBagResultData
+                {
+                    triggered = true,
+                    pickedIndex = serverResponse.payload.moneyBag.result.pickedIndex,
+                    revealed = serverResponse.payload.moneyBag.result.revealed,
+                    creditsAwarded = serverResponse.payload.moneyBag.result.creditsAwarded,
+                    winInCash = serverResponse.payload.moneyBag.result.winInCash
+                }
+                : null
+        };
 
-      moneyBagData = (serverResponse.payload?.moneyBag != null && serverResponse.payload.moneyBag.triggered && serverResponse.payload.moneyBag.result != null)
-            ? new MoneyBagResultData
-            {
-              triggered = true,
-              pickedIndex = serverResponse.payload.moneyBag.result.pickedIndex,
-              revealed = serverResponse.payload.moneyBag.result.revealed,
-              creditsAwarded = serverResponse.payload.moneyBag.result.creditsAwarded,
-              winInCash = serverResponse.payload.moneyBag.result.winInCash
-            }
-            : null
-    };
-
-    return result;
-  }
-
-  private static List<List<int>> ConvertReelsToMatrix(List<List<string>> serverReels, List<List<string>> serverMatrix, List<ServerWaysWin> waysWins, GameConfig gameConfig)
-  {
-    var sourceReels = serverMatrix ?? serverReels;
-    int rowCount = gameConfig != null ? gameConfig.rowCount : 3;
-    int reelCount = gameConfig != null ? gameConfig.reelCount : 3;
-
-    if (sourceReels == null || sourceReels.Count == 0)
-    {
-      UnityEngine.Debug.LogError("Invalid server reels/matrix: sourceReels is null or empty");
-      return GenerateDefaultMatrix(rowCount, reelCount);
+        return result;
     }
 
-    int totalRows = sourceReels.Count;
-    int totalCols = sourceReels[0].Count;
-
-    var matrix = new List<List<int>>();
-
-    for (int col = 0; col < totalCols; col++)
+    private static List<List<int>> ConvertReelsToMatrix(List<List<string>> serverReels, List<List<string>> serverMatrix, List<ServerWaysWin> waysWins, GameConfig gameConfig)
     {
-      var column = new List<int>();
-      for (int row = 0; row < totalRows; row++)
-      {
-        if (col < sourceReels[row].Count)
+        var sourceReels = serverMatrix ?? serverReels;
+        int rowCount = gameConfig != null ? gameConfig.rowCount : 3;
+        int reelCount = gameConfig != null ? gameConfig.reelCount : 3;
+
+        if (sourceReels == null || sourceReels.Count == 0)
         {
-          string symbolStr = sourceReels[row][col];
-          if (int.TryParse(symbolStr, out int symbolId))
-          {
-            column.Add(symbolId);
-          }
-          else
-          {
-            column.Add(0);
-          }
+            UnityEngine.Debug.LogError("Invalid server reels/matrix: sourceReels is null or empty");
+            return GenerateDefaultMatrix(rowCount, reelCount);
         }
-        else
+
+        int totalRows = sourceReels.Count;
+        int totalCols = sourceReels[0].Count;
+
+        var matrix = new List<List<int>>();
+
+        for (int col = 0; col < totalCols; col++)
         {
-          column.Add(0);
+            var column = new List<int>();
+            for (int row = 0; row < totalRows; row++)
+            {
+                if (col < sourceReels[row].Count)
+                {
+                    string symbolStr = sourceReels[row][col];
+                    if (int.TryParse(symbolStr, out int symbolId))
+                    {
+                        column.Add(symbolId);
+                    }
+                    else
+                    {
+                        column.Add(0);
+                    }
+                }
+                else
+                {
+                    column.Add(0);
+                }
+            }
+            matrix.Add(column);
         }
-      }
-      matrix.Add(column);
+
+        return matrix;
     }
 
-    return matrix;
-  }
-
-  private static List<List<int>> GenerateDefaultMatrix(int rowCount = 3, int reelCount = 3)
-  {
-    var matrix = new List<List<int>>();
-    for (int col = 0; col < reelCount; col++)
+    private static List<List<int>> GenerateDefaultMatrix(int rowCount = 3, int reelCount = 3)
     {
-      var column = new List<int>();
-      for (int row = 0; row < rowCount; row++)
-      {
-        column.Add(0);
-      }
-      matrix.Add(column);
+        var matrix = new List<List<int>>();
+        for (int col = 0; col < reelCount; col++)
+        {
+            var column = new List<int>();
+            for (int row = 0; row < rowCount; row++)
+            {
+                column.Add(0);
+            }
+            matrix.Add(column);
+        }
+        return matrix;
     }
-    return matrix;
-  }
 
     private static List<int> FlattenPositions(List<List<int>> positions, int reelCount)
     {
@@ -826,114 +723,114 @@ public static class InitDataConverter
     }
 
     private static List<WinLine> ConvertWinningLines(List<ServerWinLine> serverWinLines, List<ServerWaysWin> serverWaysWins, GameConfig gameConfig)
-  {
-    var winLines = new List<WinLine>();
-    int reelCount = gameConfig != null ? gameConfig.reelCount : 3;
-
-    if (serverWinLines != null && serverWinLines.Count > 0)
     {
-      int index = 0;
-      foreach (var line in serverWinLines)
-      {
-        var flatPositions = new List<int>();
-        if (line.matchedPositions != null && line.matchedPositions.Count > 0)
+        var winLines = new List<WinLine>();
+        int reelCount = gameConfig != null ? gameConfig.reelCount : 3;
+
+        if (serverWinLines != null && serverWinLines.Count > 0)
         {
-          foreach (var pos in line.matchedPositions)
-          {
-            int flatIndex = pos.row * reelCount + pos.col;
-            flatPositions.Add(flatIndex);
-          }
-        }
-        else if (line.positions != null)
-        {
-          if (line.positions is Newtonsoft.Json.Linq.JArray jArr)
-          {
-            foreach (var item in jArr)
+            int index = 0;
+            foreach (var line in serverWinLines)
             {
-              if (item is Newtonsoft.Json.Linq.JArray subArr && subArr.Count >= 2)
-              {
-                int row = (int)subArr[0];
-                int col = (int)subArr[1];
-                flatPositions.Add(row * reelCount + col);
-              }
-              else if (item is Newtonsoft.Json.Linq.JArray subArr1 && subArr1.Count == 1)
-              {
-                flatPositions.Add((int)subArr1[0]);
-              }
-              else if (int.TryParse(item.ToString(), out int pVal))
-              {
-                flatPositions.Add(pVal);
-              }
+                var flatPositions = new List<int>();
+                if (line.matchedPositions != null && line.matchedPositions.Count > 0)
+                {
+                    foreach (var pos in line.matchedPositions)
+                    {
+                        int flatIndex = pos.row * reelCount + pos.col;
+                        flatPositions.Add(flatIndex);
+                    }
+                }
+                else if (line.positions != null)
+                {
+                    if (line.positions is Newtonsoft.Json.Linq.JArray jArr)
+                    {
+                        foreach (var item in jArr)
+                        {
+                            if (item is Newtonsoft.Json.Linq.JArray subArr && subArr.Count >= 2)
+                            {
+                                int row = (int)subArr[0];
+                                int col = (int)subArr[1];
+                                flatPositions.Add(row * reelCount + col);
+                            }
+                            else if (item is Newtonsoft.Json.Linq.JArray subArr1 && subArr1.Count == 1)
+                            {
+                                flatPositions.Add((int)subArr1[0]);
+                            }
+                            else if (int.TryParse(item.ToString(), out int pVal))
+                            {
+                                flatPositions.Add(pVal);
+                            }
+                        }
+                    }
+                    else if (line.positions is List<List<int>> list2D)
+                    {
+                        foreach (var pair in list2D)
+                        {
+                            if (pair.Count >= 2)
+                            {
+                                int row = pair[0];
+                                int col = pair[1];
+                                flatPositions.Add(row * reelCount + col);
+                            }
+                            else if (pair.Count == 1)
+                            {
+                                flatPositions.Add(pair[0]);
+                            }
+                        }
+                    }
+                    else if (line.positions is List<int> list1D)
+                    {
+                        flatPositions.AddRange(list1D);
+                    }
+                }
+
+                int effectiveLineId = line.lineIndex >= 0 ? line.lineIndex : (line.lineId >= 0 ? line.lineId : index++);
+                double effectiveWinAmount = line.payout > 0 ? line.payout : line.winAmount;
+
+                winLines.Add(new WinLine
+                {
+                    lineId = effectiveLineId,
+                    symbolId = line.symbolId,
+                    positions = flatPositions,
+                    winAmount = effectiveWinAmount
+                });
             }
-          }
-          else if (line.positions is List<List<int>> list2D)
-          {
-            foreach (var pair in list2D)
-            {
-              if (pair.Count >= 2)
-              {
-                int row = pair[0];
-                int col = pair[1];
-                flatPositions.Add(row * reelCount + col);
-              }
-              else if (pair.Count == 1)
-              {
-                flatPositions.Add(pair[0]);
-              }
-            }
-          }
-          else if (line.positions is List<int> list1D)
-          {
-            flatPositions.AddRange(list1D);
-          }
+            return winLines;
         }
 
-        int effectiveLineId = line.lineIndex >= 0 ? line.lineIndex : (line.lineId >= 0 ? line.lineId : index++);
-        double effectiveWinAmount = line.payout > 0 ? line.payout : line.winAmount;
-
-        winLines.Add(new WinLine
+        if (serverWaysWins != null && serverWaysWins.Count > 0)
         {
-          lineId = effectiveLineId,
-          symbolId = line.symbolId,
-          positions = flatPositions,
-          winAmount = effectiveWinAmount
-        });
-      }
-      return winLines;
+            int index = 0;
+            foreach (var waysWin in serverWaysWins)
+            {
+                var flatPositions = new List<int>();
+                if (waysWin.matchedPositions != null)
+                {
+                    foreach (var pos in waysWin.matchedPositions)
+                    {
+                        int flatIndex = pos.row * reelCount + pos.col;
+                        flatPositions.Add(flatIndex);
+                    }
+                }
+
+                winLines.Add(new WinLine
+                {
+                    lineId = index++,
+                    symbolId = waysWin.symbolId,
+                    positions = flatPositions,
+                    winAmount = waysWin.winInCash
+                });
+            }
+        }
+
+        return winLines;
     }
 
-    if (serverWaysWins != null && serverWaysWins.Count > 0)
+    private static double CalculateNewBalance(double currentBalance, double totalPay, double winAmount)
     {
-      int index = 0;
-      foreach (var waysWin in serverWaysWins)
-      {
-        var flatPositions = new List<int>();
-        if (waysWin.matchedPositions != null)
-        {
-          foreach (var pos in waysWin.matchedPositions)
-          {
-            int flatIndex = pos.row * reelCount + pos.col;
-            flatPositions.Add(flatIndex);
-          }
-        }
-
-        winLines.Add(new WinLine
-        {
-          lineId = index++,
-          symbolId = waysWin.symbolId,
-          positions = flatPositions,
-          winAmount = waysWin.winInCash
-        });
-      }
+        return currentBalance + winAmount;
     }
-
-    return winLines;
-  }
-
-  private static double CalculateNewBalance(double currentBalance, double totalPay, double winAmount)
-  {
-    return currentBalance + winAmount;
-  }
 }
 
 #endregion

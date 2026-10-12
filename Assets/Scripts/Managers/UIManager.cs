@@ -158,6 +158,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Game Rules Dynamic Texts - 9 Symbols")]
     [SerializeField] private TMP_Text totalLineCountText;
+    [SerializeField] private TMP_Text totalLineCountTextPortrait;
     [SerializeField] private TMP_Text ruleRed3XText;
     [SerializeField] private TMP_Text ruleBlue2XText;
     [SerializeField] private TMP_Text ruleBlue7Text;
@@ -570,7 +571,7 @@ public class UIManager : MonoBehaviour
         UpdateBalanceDisplay();
         if (result != null)
         {
-            double displayWin = result.winAmount - result.GetTotalFeatureDeferredWins();
+            double displayWin = result.winAmount;
             if (displayWin < 0) displayWin = 0;
             UpdateWinDisplay(displayWin);
         }
@@ -580,7 +581,7 @@ public class UIManager : MonoBehaviour
     {
         if (result != null)
         {
-            double displayWin = result.winAmount - result.GetTotalFeatureDeferredWins();
+            double displayWin = result.winAmount;
             if (displayWin < 0) displayWin = 0;
             UpdateWinDisplay(displayWin);
         }
@@ -1444,10 +1445,7 @@ public class UIManager : MonoBehaviour
     {
         if (gameManager == null || gameManager.gameConfig == null) return;
 
-        if (totalLineCountText != null)
-        {
-            totalLineCountText.text = gameManager.gameConfig.paylineCount.ToString();
-        }
+        SetTMPText(totalLineCountText, totalLineCountTextPortrait, gameManager.gameConfig.paylineCount.ToString());
 
         SetRuleSymbolText(1, ruleRed3XText);      // Wild
         SetRuleSymbolText(2, ruleBlue2XText);     // Red7
