@@ -9,9 +9,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] internal UIManager uiManager;
     [SerializeField] private PopupManager popupManager;
     [SerializeField] private SlotView slotView;
-    [Header("Dual Wheel Controllers")]
-    [SerializeField] internal WheelSpinController redWheel;
-    [SerializeField] internal WheelSpinController greenWheel;
 
     [Header("Spin Settings")]
     [SerializeField] private float normalSpinDuration = 3.5f;
@@ -66,11 +63,6 @@ public class GameManager : MonoBehaviour
         if (initialMatrix != null && slotView != null)
         {
             slotView.SetInitialMatrix(initialMatrix);
-        }
-
-        if (uiManager != null && gameConfig != null && gameConfig.dualWheels != null)
-        {
-            uiManager.SetupDualWheels(gameConfig.dualWheels);
         }
 
         isInitialized = true;
@@ -285,9 +277,8 @@ public class GameManager : MonoBehaviour
         double winVal = lastResult != null ? (lastResult.grandTotalWin > 0 ? lastResult.grandTotalWin : lastResult.winAmount) : 0;
         double multiplier = bet > 0 ? (winVal / bet) : 0;
 
-        bool isFeatureTriggered = lastResult != null && lastResult.dualWheelsBonusData != null && lastResult.dualWheelsBonusData.isTriggered;
 
-        if (lastResult != null && winVal > 0 && !isFeatureTriggered)
+        if (lastResult != null && winVal > 0)
         {
             if (multiplier >= WinThreshold)
             {
@@ -378,49 +369,9 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        if (lastResult != null && lastResult.dualWheelsBonusData != null && lastResult.dualWheelsBonusData.isTriggered)
-        {
-            yield return StartCoroutine(DelayDualWheelsTriggerResult());
-            yield break;
-        }
-
-
-
-
-
         ResumeAfterSpecialFeature();
     }
 
-    private IEnumerator DelayDualWheelsTriggerResult()
-    {
-        bool animDone = false;
-        if (slotView != null)
-        {
-            slotView.AnimateDualWheelWin(() => { animDone = true; });
-            yield return new WaitUntil(() => animDone);
-            slotView.DisableAllOverlays();
-        }
-        else
-        {
-            yield return new WaitForSeconds(1.0f);
-        }
-
-        if (uiManager != null)
-        {
-            uiManager.TriggerDualWheelsBonus(lastResult.dualWheelsBonusData, () =>
-            {
-                if (lastResult != null && lastResult.dualWheelsBonusData != null)
-                {
-                    lastResult.dualWheelsBonusData.isTriggered = false;
-                }
-                ResumeAfterSpecialFeature();
-            });
-        }
-        else
-        {
-            ResumeAfterSpecialFeature();
-        }
-    }
 
     private void ResumeAfterSpecialFeature()
     {

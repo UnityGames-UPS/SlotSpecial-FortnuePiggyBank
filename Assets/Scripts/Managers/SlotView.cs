@@ -76,12 +76,6 @@ public class SlotView : MonoBehaviour
     [Tooltip("GameObject references for win animations. Each should have an ImageAnimation component attached.")]
     [SerializeField] private ColumnOverlays[] winAnimationColumns = new ColumnOverlays[5];
 
-    [Header("Tension / Anticipation Settings")]
-    [Tooltip("Frame object to enable on the last slot during tension extra spin when wheel feature is triggered.")]
-    [SerializeField] private GameObject lastSlotTensionFrame;
-    [Tooltip("Extra spin duration in seconds for the last slot during tension spin.")]
-    [SerializeField] private float tensionSpinExtraDuration = 2.0f;
-
 
     [Header("Symbol Info Card")]
     [SerializeField] private SymbolInfoCard symbolInfoCard;
@@ -175,10 +169,7 @@ public class SlotView : MonoBehaviour
         if (winAnimationParent) winAnimationParent.SetActive(false);
         HidePhase1TotalWinText(false);
         if (symbolInfoCard) symbolInfoCard.HideCard();
-        if (lastSlotTensionFrame) lastSlotTensionFrame.SetActive(false);
-        AudioManager.Instance?.StopTensionBuilder();
         AudioManager.Instance?.StopReelSpinLoop();
-        AudioManager.Instance?.StopWheelTriggerWinLine();
     }
 
     private void SetupSymbolButtons()
@@ -629,46 +620,29 @@ public class SlotView : MonoBehaviour
 
         AudioManager.Instance?.StopReelSpinLoop();
 
-        bool isWheelTriggered = gameManager != null &&
-                               gameManager.lastResult != null &&
-                               gameManager.lastResult.dualWheelsBonusData != null &&
-                               gameManager.lastResult.dualWheelsBonusData.isTriggered;
-
         float stagger = isQuickStop ? quickStopStagger : (isTurbo ? (reelStopStagger * 0.5f) : reelStopStagger);
 
         for (int col = 0; col < maxCols; col++)
         {
-            bool isLastReel = (col == maxCols - 1);
             float delay = col * stagger;
-            if (isLastReel && isWheelTriggered)
-            {
-                delay += tensionSpinExtraDuration;
-            }
-            StartCoroutine(StopSingleReel(col, resultMatrix[col], delay, isQuickStop || isTurbo, isLastReel && isWheelTriggered, stagger));
+            StartCoroutine(StopSingleReel(col, resultMatrix[col], delay, isQuickStop || isTurbo));
         }
 
-        float extraDelay = isWheelTriggered ? tensionSpinExtraDuration : 0f;
         float longestStopTime;
         if (isQuickStop)
         {
-            longestStopTime = ((maxCols - 1) * stagger) + extraDelay + quickStopDuration;
+            longestStopTime = ((maxCols - 1) * stagger) + quickStopDuration;
         }
         else if (isTurbo)
         {
-            longestStopTime = ((maxCols - 1) * stagger) + extraDelay + (stopOvershootDuration * 0.5f) + (stopSettleDuration * 0.5f);
+            longestStopTime = ((maxCols - 1) * stagger) + (stopOvershootDuration * 0.5f) + (stopSettleDuration * 0.5f);
         }
         else
         {
-            longestStopTime = ((maxCols - 1) * stagger) + extraDelay + stopOvershootDuration + stopSettleDuration;
+            longestStopTime = ((maxCols - 1) * stagger) + stopOvershootDuration + stopSettleDuration;
         }
 
         yield return new WaitForSeconds(longestStopTime);
-
-        if (lastSlotTensionFrame != null)
-        {
-            lastSlotTensionFrame.SetActive(false);
-        }
-        AudioManager.Instance?.StopTensionBuilder();
 
         isSpinning = false;
 
@@ -701,32 +675,9 @@ public class SlotView : MonoBehaviour
         onComplete?.Invoke();
     }
 
-    private IEnumerator StopSingleReel(int columnIndex, List<int> targetSymbols, float delay, bool isQuickStop, bool isTensionSpin = false, float currentStagger = 0.2f)
+    private IEnumerator StopSingleReel(int columnIndex, List<int> targetSymbols, float delay, bool isQuickStop)
     {
-        if (isTensionSpin)
-        {
-            float frameEnableDelay = (columnIndex > 0) ? (columnIndex - 1) * currentStagger : 0f;
-            if (delay > frameEnableDelay)
-            {
-                if (frameEnableDelay > 0f)
-                {
-                    yield return new WaitForSeconds(frameEnableDelay);
-                }
-                if (lastSlotTensionFrame != null) lastSlotTensionFrame.SetActive(true);
-                AudioManager.Instance?.PlayTensionBuilder();
-                yield return new WaitForSeconds(delay - frameEnableDelay);
-            }
-            else
-            {
-                if (lastSlotTensionFrame != null) lastSlotTensionFrame.SetActive(true);
-                AudioManager.Instance?.PlayTensionBuilder();
-                if (delay > 0)
-                {
-                    yield return new WaitForSeconds(delay);
-                }
-            }
-        }
-        else if (delay > 0)
+        if (delay > 0)
         {
             yield return new WaitForSeconds(delay);
         }
@@ -856,122 +807,6 @@ public class SlotView : MonoBehaviour
     }
 
     #endregion
-
-    internal void AnimateDualWheelWin(System.Action onComplete = null)
-    {
-        if (currentDisplayMatrix == null)
-        {
-            onComplete?.Invoke();
-            return;
-        }
-
-        KillWinTweens();
-        AudioManager.Instance?.PlayWheelTriggerWinLine();
-        if (gameManager != null && gameManager.uiManager != null)
-        {
-            gameManager.uiManager.EnableRainbowPanel();
-        }
-
-        List<ImageAnimation> activeWheelAnims = new List<ImageAnimation>();
-        int completedCount = 0;
-        int targetLoops = 2;
-
-        for (int col = 0; col < 5; col++)
-        {
-            if (col >= currentDisplayMatrix.Count) continue;
-            for (int row = 0; row < currentDisplayMatrix[col].Count; row++)
-            {
-                int symId = currentDisplayMatrix[col][row];
-                if (symId >= 10 && symId <= 13)
-                {
-                    var animGO = WinBox(winAnimationColumns, col, row);
-                    if (animGO != null)
-                    {
-                        ImageAnimation imageAnim = animGO.GetComponentInChildren<ImageAnimation>();
-                        int imageIndex = 6 + row;
-                        Image symbolImage = (col < reelImagesList.Count && reelImagesList[col].images != null && imageIndex < reelImagesList[col].images.Count)
-                            ? reelImagesList[col].images[imageIndex]
-                            : null;
-
-                        if (imageAnim != null)
-                        {
-                            activeWheelAnims.Add(imageAnim);
-
-                            List<Sprite> animSprites = (animationSpriteArrays != null && symId >= 0 && symId < animationSpriteArrays.Length) ? animationSpriteArrays[symId] : null;
-                            if (animSprites != null && animSprites.Count > 0)
-                            {
-                                imageAnim.textureArray = animSprites;
-                            }
-                            imageAnim.animationMode = ImageAnimation.AnimationMode.SINGLE_PHASE;
-                            imageAnim.useDynamicFramerate = true;
-                            imageAnim.dynamicLoopDuration = winSymbolLoopDuration;
-                            imageAnim.doLoopAnimation = true;
-                            imageAnim.delayBetweenLoop = 0f;
-
-                            animGO.SetActive(true);
-                            Image animRenderer = imageAnim.rendererDelegate != null ? imageAnim.rendererDelegate : imageAnim.GetComponent<Image>();
-                            if (animRenderer == null && animGO != null) animRenderer = animGO.GetComponentInChildren<Image>();
-                            if (animRenderer != null)
-                            {
-                                animRenderer.DOKill();
-                                Color c = animRenderer.color;
-                                animRenderer.color = new Color(c.r, c.g, c.b, 1f);
-                                animRenderer.enabled = true;
-                                animRenderer.gameObject.SetActive(true);
-                            }
-                            if (symbolImage != null)
-                            {
-                                symbolImage.DOKill();
-                                Color c = symbolImage.color;
-                                symbolImage.color = new Color(c.r, c.g, c.b, 0f);
-                                symbolImage.enabled = false;
-                                symbolImage.gameObject.SetActive(false);
-                            }
-
-                            imageAnim.onLoopComplete = (loopCount) =>
-                            {
-                                if (loopCount >= targetLoops)
-                                {
-                                    imageAnim.onLoopComplete = null;
-                                    imageAnim.StopAnimation();
-                                    if (animGO != null)
-                                    {
-                                        ResetWinBoxPosition(animGO);
-                                        animGO.SetActive(false);
-                                    }
-
-                                    if (symbolImage != null)
-                                    {
-                                        symbolImage.DOKill();
-                                        Color c = symbolImage.color;
-                                        symbolImage.color = new Color(c.r, c.g, c.b, 1f);
-                                        symbolImage.enabled = true;
-                                        symbolImage.gameObject.SetActive(true);
-                                    }
-
-                                    completedCount++;
-                                    if (completedCount >= activeWheelAnims.Count)
-                                    {
-                                        DisableAllOverlays();
-                                        onComplete?.Invoke();
-                                    }
-                                }
-                            };
-
-                            imageAnim.StartAnimation();
-                        }
-                    }
-                }
-            }
-        }
-
-        if (activeWheelAnims.Count == 0)
-        {
-            DisableAllOverlays();
-            onComplete?.Invoke();
-        }
-    }
-
 
 
     #region Win Line Animation
@@ -1319,36 +1154,10 @@ public class SlotView : MonoBehaviour
         }
     }
 
-    public static string FormatSpriteText(string input)
-    {
-        if (string.IsNullOrEmpty(input)) return string.Empty;
-
-        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        foreach (char c in input)
-        {
-            if (c >= '0' && c <= '9')
-            {
-                sb.Append("<sprite=").Append(c - '0').Append(">");
-            }
-            else if (c == '=')
-            {
-                sb.Append("<sprite=10>");
-            }
-            else if (c == '.' || c == ',')
-            {
-                sb.Append("<sprite=11>");
-            }
-            else
-            {
-                sb.Append(c);
-            }
-        }
-        return sb.ToString();
-    }
-
+    // Digit -> sprite index in the win-number sprite asset. Do not regenerate, re-slice or reorder that asset.
     private static readonly int[] pigDigitSprite = { 2, 0, 1, 3, 4, 5, 7, 6, 10, 11 };
 
-    public static string FormatPigSpriteText(double amount)
+    private static string FormatPigSpriteText(double amount)
     {
         string input = amount.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
         var sb = new System.Text.StringBuilder();
@@ -1360,11 +1169,6 @@ public class SlotView : MonoBehaviour
             else sb.Append(c);
         }
         return sb.ToString();
-    }
-
-    public static string FormatSpriteText(double amount)
-    {
-        return FormatSpriteText(amount.ToString("0.###"));
     }
 
     private void HidePhase1TotalWinText(bool animate = true)
