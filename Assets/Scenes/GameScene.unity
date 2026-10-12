@@ -28208,7 +28208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f521a04de7f494272a617b2719edd271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SocketIOManager
-  testToken: e3d0eb03ebd94bb2ad6cf33cc9b2619a
+  testToken: 9457883298e54576883377b0907a4e2a
   gameManager: {fileID: 1206269883}
   uiManager: {fileID: 885496184}
   popupManager: {fileID: 1363796882}
@@ -32571,7 +32571,7 @@ MonoBehaviour:
   symbolHeight: 205
   spinSpeed: 5000
   reelStartStagger: 0.08
-  reelStopStagger: 0.15
+  reelStopStagger: 0.4
   spinBufferCount: 6
   stopOvershootDistance: 80
   stopOvershootDuration: 0.2
