@@ -8779,7 +8779,6 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1835577566}
-  - {fileID: 1732666856}
   - {fileID: 1173043578}
   - {fileID: 2103801737}
   - {fileID: 524679666}
@@ -18272,9 +18271,9 @@ MonoBehaviour:
   legendaryWinTitleObject: {fileID: 504833636}
   winTypeFullScreenButton: {fileID: 1812535009}
   winTypeStarRain: {fileID: 996374361}
-  bigWinThreshold: 5
-  megaWinThreshold: 10
-  legendaryWinThreshold: 20
+  bigWinThreshold: 35
+  megaWinThreshold: 75
+  legendaryWinThreshold: 115
   maxCountDuration: 3
   autoCloseDelay: 2
   spinButton: {fileID: 173060499}
@@ -31681,143 +31680,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1729951277}
-  m_CullTransparentMesh: 1
---- !u!1 &1732666855
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1732666856}
-  - component: {fileID: 1732666859}
-  - component: {fileID: 1732666858}
-  - component: {fileID: 1732666857}
-  m_Layer: 5
-  m_Name: GlowRing
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &1732666856
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1732666855}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 451360944}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 295.41, y: 16.274002}
-  m_SizeDelta: {x: 440, y: 680}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1732666857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1732666855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad710797c4c5a49d98a053ecb28392bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
-  textureArray:
-  - {fileID: 21300000, guid: 91716d1b092804438824e0d109f6222c, type: 3}
-  - {fileID: 21300000, guid: bd623040d5ad44d67ad801eb65f8a6b3, type: 3}
-  - {fileID: 21300000, guid: 7dfef818d7ceb4a3db6ec3076bcdc83f, type: 3}
-  - {fileID: 21300000, guid: ebd80d7e18478406ebe0a33839aeae50, type: 3}
-  - {fileID: 21300000, guid: d3bf2732e873e4154bb3d62962474d1a, type: 3}
-  - {fileID: 21300000, guid: b6eee1872423e4df4ab360ab2d5814f6, type: 3}
-  - {fileID: 21300000, guid: bdb4c417bc8204954b0f82d9669367aa, type: 3}
-  - {fileID: 21300000, guid: 07edb005a090e4e3ea30b66eabdc09b9, type: 3}
-  - {fileID: 21300000, guid: 35476355d43da4ffcbe6a9d9d7d64931, type: 3}
-  - {fileID: 21300000, guid: a4cfdac001f0c40afb805cace02e56c8, type: 3}
-  - {fileID: 21300000, guid: add248d46c63c486a846f5e382204e35, type: 3}
-  - {fileID: 21300000, guid: 14f2b558f33d24c1f96c9472b0d850b1, type: 3}
-  - {fileID: 21300000, guid: 124a901a87b91434a96af5c56bc50395, type: 3}
-  - {fileID: 21300000, guid: 93ba16803c3d14f63ac53e391cd82427, type: 3}
-  - {fileID: 21300000, guid: e349e3644650a4bbba43b124c5690587, type: 3}
-  - {fileID: 21300000, guid: e3fc55baa5f124b1bb33a87b4ad41f9f, type: 3}
-  - {fileID: 21300000, guid: 8a38e4870e6374214ac8c88c3f802985, type: 3}
-  - {fileID: 21300000, guid: 1ee05477a843f4ff29e65ccae2df2220, type: 3}
-  - {fileID: 21300000, guid: 2914d97e97f174212987308d1c3646ee, type: 3}
-  - {fileID: 21300000, guid: 7a5fe858925d54defb27207db86a63ce, type: 3}
-  - {fileID: 21300000, guid: 5f055f78073f749d29efd86d06a0e4c9, type: 3}
-  - {fileID: 21300000, guid: 8a542dd23fd444bae9b4485298e208d2, type: 3}
-  - {fileID: 21300000, guid: 0ece408eee9d743f28657838dcd755d4, type: 3}
-  - {fileID: 21300000, guid: 537077deda76c4f158da1dd48461d686, type: 3}
-  - {fileID: 21300000, guid: 59ab6653d02ae49b2b6ee14da4ebb61d, type: 3}
-  - {fileID: 21300000, guid: 6c9b126530d6642c0981f6345142dfe5, type: 3}
-  - {fileID: 21300000, guid: 98f16d70b6a5545259051891420e7853, type: 3}
-  - {fileID: 21300000, guid: af5d4089623264556832794fad521018, type: 3}
-  - {fileID: 21300000, guid: a9561f97acd364cf88c99d514a9742da, type: 3}
-  - {fileID: 21300000, guid: 392e43b4ccc1f4f4b9b72b7f844ec3a1, type: 3}
-  - {fileID: 21300000, guid: 91716d1b092804438824e0d109f6222c, type: 3}
-  rendererDelegate: {fileID: 1732666858}
-  useSharedMaterial: 1
-  doLoopAnimation: 1
-  useDynamicFramerate: 0
-  dynamicLoopDuration: 1
-  targetFPS: 24
-  StartOnAwake: 0
-  StartonEnable: 1
-  currentAnimationState: 0
-  AnimationSpeed: 30
-  delayBetweenLoop: 0
-  animationMode: 0
-  phase2StartIndex: 0
-  phase1LoopCount: 1
-  phase2LoopCount: -1
-  useCustomSpeed: 0
-  phase2AnimationSpeed: 5
---- !u!114 &1732666858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1732666855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.627451}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 91716d1b092804438824e0d109f6222c, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 1
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1732666859
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1732666855}
   m_CullTransparentMesh: 1
 --- !u!1 &1736836980
 GameObject:
