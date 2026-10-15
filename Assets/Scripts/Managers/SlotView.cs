@@ -92,6 +92,7 @@ public class SlotView : MonoBehaviour
     [SerializeField] private float outerScale = 0.90f;
     [SerializeField] private float visibleHalfHeight = 145f;
     [SerializeField] private float outerHalfHeight = 220f;
+    [SerializeField] private float middleRowBoost = 1f;
 
     private float[] reelCurveIntensity = new float[3] { 1f, 1f, 1f };
     private Tween[] reelSettleCurveTweens = new Tween[3];
@@ -875,6 +876,14 @@ public class SlotView : MonoBehaviour
         }
     }
 
+    private void ApplyWinBoxScale(GameObject animGO, Image symbolImage)
+    {
+        if (animGO == null || symbolImage == null) return;
+        if (!winBoxBaseScales.ContainsKey(animGO)) winBoxBaseScales[animGO] = animGO.transform.localScale;
+        float s = symbolImage.rectTransform.localScale.x;
+        animGO.transform.localScale = winBoxBaseScales[animGO] * s;
+    }
+
     private void PlayStaticWinPulse(GameObject animGO, ImageAnimation imageAnim, Image symbolImage, bool loop)
     {
         Image boxImage = imageAnim.rendererDelegate != null ? imageAnim.rendererDelegate : imageAnim.GetComponent<Image>();
@@ -974,6 +983,7 @@ public class SlotView : MonoBehaviour
             imageAnim.delayBetweenLoop = 0f;
 
             animGO.SetActive(true);
+            ApplyWinBoxScale(animGO, symbolImage);
             Image animRenderer = imageAnim.rendererDelegate != null ? imageAnim.rendererDelegate : imageAnim.GetComponent<Image>();
             if (animRenderer == null && animGO != null) animRenderer = animGO.GetComponentInChildren<Image>();
             if (animRenderer != null)
@@ -1096,7 +1106,7 @@ public class SlotView : MonoBehaviour
             imageAnim.onLoopComplete = null;
 
             animGO.SetActive(true);
-
+            ApplyWinBoxScale(animGO, symbolImage);
             Image animRenderer = imageAnim.rendererDelegate != null ? imageAnim.rendererDelegate : imageAnim.GetComponent<Image>();
             if (animRenderer == null && animGO != null) animRenderer = animGO.GetComponentInChildren<Image>();
             if (animRenderer != null)
@@ -1303,6 +1313,7 @@ public class SlotView : MonoBehaviour
                         }
                     }
                 }
+                UpdateCylindricalSpinEffect(force: true);
             }
         }
     }
@@ -1462,6 +1473,8 @@ public class SlotView : MonoBehaviour
                     targetScale = Mathf.Lerp(1f, Mathf.Lerp(edgeScale, outerScale, extraT), intensity);
                 }
 
+                float boost = Mathf.Lerp(middleRowBoost, 1f, Mathf.Clamp01(absY * invVisibleHalfHeight));
+                targetScale *= boost;
                 Vector2 anchoredPos = rect.anchoredPosition;
                 if (force || !Mathf.Approximately(anchoredPos.x, targetX))
                 {
