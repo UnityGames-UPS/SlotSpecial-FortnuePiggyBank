@@ -44,21 +44,6 @@ TextureImporter:
   - first:
       213: -8229053068627465311
     second: 0000_00013_13
-  - first:
-      213: 2200402530676105073
-    second: 0000_00013_14
-  - first:
-      213: 1535917702554313103
-    second: 0000_00013_15
-  - first:
-      213: -3086053141605723043
-    second: 0000_00013_16
-  - first:
-      213: 2692352344959065194
-    second: 0000_00013_17
-  - first:
-      213: 9210424582277937423
-    second: 0000_00013_18
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -184,9 +169,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 68
-        width: 1920
-        height: 1012
+        y: 26
+        width: 960
+        height: 514
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -205,10 +190,10 @@ TextureImporter:
       name: 0000_00013_1
       rect:
         serializedVersion: 2
-        x: 513
-        y: 148
-        width: 11
-        height: 7
+        x: 312
+        y: 48
+        width: 19
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -227,10 +212,10 @@ TextureImporter:
       name: 0000_00013_2
       rect:
         serializedVersion: 2
-        x: 627
-        y: 98
-        width: 28
-        height: 17
+        x: 313
+        y: 35
+        width: 7
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -249,10 +234,10 @@ TextureImporter:
       name: 0000_00013_3
       rect:
         serializedVersion: 2
-        x: 654
-        y: 118
+        x: 315
+        y: 41
         width: 7
-        height: 10
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -271,10 +256,10 @@ TextureImporter:
       name: 0000_00013_4
       rect:
         serializedVersion: 2
-        x: 871
-        y: 99
-        width: 10
-        height: 9
+        x: 324
+        y: 58
+        width: 8
+        height: 8
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -293,10 +278,10 @@ TextureImporter:
       name: 0000_00013_5
       rect:
         serializedVersion: 2
-        x: 877
-        y: 75
-        width: 6
-        height: 10
+        x: 450
+        y: 40
+        width: 8
+        height: 8
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -315,10 +300,10 @@ TextureImporter:
       name: 0000_00013_6
       rect:
         serializedVersion: 2
-        x: 902
-        y: 77
-        width: 15
-        height: 23
+        x: 519
+        y: 41
+        width: 30
+        height: 29
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -337,8 +322,8 @@ TextureImporter:
       name: 0000_00013_7
       rect:
         serializedVersion: 2
-        x: 1004
-        y: 70
+        x: 520
+        y: 66
         width: 6
         height: 6
       alignment: 0
@@ -359,10 +344,10 @@ TextureImporter:
       name: 0000_00013_8
       rect:
         serializedVersion: 2
-        x: 1045
-        y: 96
-        width: 32
-        height: 47
+        x: 547
+        y: 70
+        width: 7
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -381,10 +366,10 @@ TextureImporter:
       name: 0000_00013_9
       rect:
         serializedVersion: 2
-        x: 1074
-        y: 82
-        width: 15
-        height: 22
+        x: 551
+        y: 44
+        width: 7
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -403,10 +388,10 @@ TextureImporter:
       name: 0000_00013_10
       rect:
         serializedVersion: 2
-        x: 1084
-        y: 115
-        width: 7
-        height: 11
+        x: 553
+        y: 61
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -425,10 +410,10 @@ TextureImporter:
       name: 0000_00013_11
       rect:
         serializedVersion: 2
-        x: 1088
-        y: 118
-        width: 8
-        height: 9
+        x: 564
+        y: 70
+        width: 6
+        height: 8
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -447,10 +432,10 @@ TextureImporter:
       name: 0000_00013_12
       rect:
         serializedVersion: 2
-        x: 1095
-        y: 140
-        width: 12
-        height: 13
+        x: 566
+        y: 56
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -469,10 +454,10 @@ TextureImporter:
       name: 0000_00013_13
       rect:
         serializedVersion: 2
-        x: 1111
-        y: 68
+        x: 576
+        y: 51
         width: 7
-        height: 8
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -483,116 +468,6 @@ TextureImporter:
       bones: []
       spriteID: 1ab2f9e55d78ccd80800000000000000
       internalID: -8229053068627465311
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 0000_00013_14
-      rect:
-        serializedVersion: 2
-        x: 1129
-        y: 141
-        width: 9
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 17fd1d38176698e10800000000000000
-      internalID: 2200402530676105073
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 0000_00013_15
-      rect:
-        serializedVersion: 2
-        x: 1133
-        y: 112
-        width: 7
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f81ebf8430da05510800000000000000
-      internalID: 1535917702554313103
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 0000_00013_16
-      rect:
-        serializedVersion: 2
-        x: 1155
-        y: 103
-        width: 11
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d54dc90b4032c25d0800000000000000
-      internalID: -3086053141605723043
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 0000_00013_17
-      rect:
-        serializedVersion: 2
-        x: 1191
-        y: 92
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a6c997b61382d5520800000000000000
-      internalID: 2692352344959065194
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 0000_00013_18
-      rect:
-        serializedVersion: 2
-        x: 1334
-        y: 112
-        width: 8
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f09b331db5002df70800000000000000
-      internalID: 9210424582277937423
       vertices: []
       indices: 
       edges: []
@@ -617,11 +492,6 @@ TextureImporter:
       0000_00013_11: 4161552314979210784
       0000_00013_12: -5346035589425943188
       0000_00013_13: -8229053068627465311
-      0000_00013_14: 2200402530676105073
-      0000_00013_15: 1535917702554313103
-      0000_00013_16: -3086053141605723043
-      0000_00013_17: 2692352344959065194
-      0000_00013_18: 9210424582277937423
       0000_00013_2: 4825212824814184888
       0000_00013_3: 3676253692530559382
       0000_00013_4: -6825920830744380392

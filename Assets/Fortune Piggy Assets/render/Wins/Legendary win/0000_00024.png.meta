@@ -35,9 +35,6 @@ TextureImporter:
   - first:
       213: 7603153691802452486
     second: 0000_00024_10
-  - first:
-      213: 4015797494159441622
-    second: 0000_00024_11
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -163,9 +160,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 68
-        width: 1920
-        height: 1012
+        y: 34
+        width: 960
+        height: 506
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,10 +181,10 @@ TextureImporter:
       name: 0000_00024_1
       rect:
         serializedVersion: 2
-        x: 627
-        y: 98
-        width: 28
-        height: 17
+        x: 312
+        y: 48
+        width: 19
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,10 +203,10 @@ TextureImporter:
       name: 0000_00024_2
       rect:
         serializedVersion: 2
-        x: 654
-        y: 118
+        x: 313
+        y: 35
         width: 7
-        height: 10
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -228,10 +225,10 @@ TextureImporter:
       name: 0000_00024_3
       rect:
         serializedVersion: 2
-        x: 701
-        y: 68
-        width: 218
-        height: 158
+        x: 315
+        y: 41
+        width: 7
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -250,10 +247,10 @@ TextureImporter:
       name: 0000_00024_4
       rect:
         serializedVersion: 2
-        x: 1004
-        y: 70
-        width: 6
-        height: 6
+        x: 324
+        y: 57
+        width: 11
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -272,10 +269,10 @@ TextureImporter:
       name: 0000_00024_5
       rect:
         serializedVersion: 2
-        x: 1045
-        y: 96
-        width: 32
-        height: 47
+        x: 349
+        y: 33
+        width: 111
+        height: 81
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -294,10 +291,10 @@ TextureImporter:
       name: 0000_00024_6
       rect:
         serializedVersion: 2
-        x: 1074
-        y: 82
-        width: 15
-        height: 22
+        x: 519
+        y: 41
+        width: 30
+        height: 29
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -316,9 +313,9 @@ TextureImporter:
       name: 0000_00024_7
       rect:
         serializedVersion: 2
-        x: 1084
-        y: 115
-        width: 7
+        x: 550
+        y: 56
+        width: 9
         height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -338,10 +335,10 @@ TextureImporter:
       name: 0000_00024_8
       rect:
         serializedVersion: 2
-        x: 1088
-        y: 118
-        width: 8
-        height: 9
+        x: 551
+        y: 44
+        width: 7
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -360,10 +357,10 @@ TextureImporter:
       name: 0000_00024_9
       rect:
         serializedVersion: 2
-        x: 1111
-        y: 68
-        width: 7
-        height: 8
+        x: 566
+        y: 56
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -382,10 +379,10 @@ TextureImporter:
       name: 0000_00024_10
       rect:
         serializedVersion: 2
-        x: 1133
-        y: 112
-        width: 7
-        height: 8
+        x: 568
+        y: 0
+        width: 133
+        height: 108
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -396,28 +393,6 @@ TextureImporter:
       bones: []
       spriteID: 602c59cdff3d38960800000000000000
       internalID: 7603153691802452486
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 0000_00024_11
-      rect:
-        serializedVersion: 2
-        x: 1140
-        y: 0
-        width: 260
-        height: 213
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6def6495b8afab730800000000000000
-      internalID: 4015797494159441622
       vertices: []
       indices: 
       edges: []
@@ -439,7 +414,6 @@ TextureImporter:
       0000_00024_0: 7621696602323916792
       0000_00024_1: -5183771615071207497
       0000_00024_10: 7603153691802452486
-      0000_00024_11: 4015797494159441622
       0000_00024_2: -3898881323710230063
       0000_00024_3: 640290348279280498
       0000_00024_4: -5217805784489756696
