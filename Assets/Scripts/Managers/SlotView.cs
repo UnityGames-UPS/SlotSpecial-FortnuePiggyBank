@@ -859,7 +859,7 @@ public class SlotView : MonoBehaviour
 
         AudioManager.Instance?.PlayWinLinePhase1Start();
 
-        bool isAutoPlaying = (gameManager != null && gameManager.isAutoPlaying);
+        bool isAutoPlaying = (gameManager != null && gameManager.isAutoPlaying && !gameManager.IsSpecialWinPending);
 
         if (isAutoPlaying)
         {

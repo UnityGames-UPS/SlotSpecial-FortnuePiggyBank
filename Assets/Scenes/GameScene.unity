@@ -18306,7 +18306,7 @@ MonoBehaviour:
   legendaryWinTitleObject: {fileID: 504833636}
   winTypeFullScreenButton: {fileID: 1812535009}
   winTypeStarRain: {fileID: 996374361}
-  bigWinThreshold: 20
+  bigWinThreshold: 25
   megaWinThreshold: 50
   legendaryWinThreshold: 100
   maxCountDuration: 3
@@ -24302,7 +24302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f521a04de7f494272a617b2719edd271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SocketIOManager
-  testToken: 71f76397dc7e48a78c06a5a5a32db0b7
+  testToken: 233ea39cc5b74218b210994ababed06f
   gameManager: {fileID: 1206269883}
   uiManager: {fileID: 885496184}
   popupManager: {fileID: 1363796882}

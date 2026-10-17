@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
     private Coroutine spinCoroutine;
     private bool stopRequested;
     private bool waitingForSpecialWin;
+    internal bool IsSpecialWinPending => waitingForSpecialWin;
 
     #region Initialization
 
